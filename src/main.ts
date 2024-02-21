@@ -20,6 +20,10 @@ async function bootstrap() {
   // Global Filters
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(3000);
+  app.enableCors({
+    origin: 'http://localhost:3000', // Front URL
+  });
+
+  await app.listen(4000);
 }
 bootstrap();

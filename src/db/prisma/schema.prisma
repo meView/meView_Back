@@ -2,6 +2,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../node_modules/.prisma/client"
 //  output   = "./generated/client"
 }
 
@@ -12,6 +13,13 @@ datasource db {
   // DB 이름 : swyp 
   // DATABASE_URL="postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public"
 }
+
+ model User {
+   id        String   @id
+   nickname  String?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+ }
 
 // Enum 정의
 enum SWYP_QuestionType {
