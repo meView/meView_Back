@@ -88,6 +88,5 @@ export class AuthService {
       console.error('executeKakaoLogout Error: ', error);
       throw new Error('executeKakaoLogin Error: ' + error);
     }
-    return;
   }
 }

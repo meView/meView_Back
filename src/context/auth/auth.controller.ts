@@ -13,7 +13,6 @@ export class AuthController {
     @Query('error_description') error_description: string,
     @Res() res: Response,
     @Req() req: Request,
-    @Session() session: Record<string, any>,
   ) {
     try {
       // accessToken 발급
@@ -34,13 +33,6 @@ export class AuthController {
       // TODO: 로그인 실패할 경우 행동 처리
       return res.redirect('http://localhost:3000/NotFound');
     }
-  }
-
-  // TODO: 삭제 예정, test 용도
-  @Get('session')
-  async session(@Req() req: Request, @Session() session: Record<string, any>) {
-    console.log(session);
-    return session;
   }
 
   @Get('kakao_logout')
