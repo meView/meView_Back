@@ -11,7 +11,8 @@ datasource db {
   url      = env("DATABASE_URL")
   // DB 설정 후 .env 파일에 아래 내용 추가 필수
   // DB 이름 : swyp 
-  // DATABASE_URL="postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public"
+  // DATABASE_URL='postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public'
+  // 위 URL 작성 시 작은 따옴표 사용
 }
 
  model User {
