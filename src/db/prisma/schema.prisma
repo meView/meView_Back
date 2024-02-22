@@ -1,23 +1,109 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// schema.prisma
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../node_modules/.prisma/client"
+//  output   = "./generated/client"
 }
-
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // DB 설정 후 .env 파일에 아래 내용 추가 필수
+  // DB 이름 : swyp 
+  // DATABASE_URL='postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public'
+  // 위 URL 작성 시 작은 따옴표 사용
 }
 
-model User {
-  id        String   @id
-  nickname  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+ model User {
+   id        String   @id
+   nickname  String?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+ }
+
+// Enum 정의
+enum SWYP_QuestionType {
+  STRENGTH
+  WEAKNESS
+  BOTH
+}
+
+enum SWYP_UserLoginType {
+  KAKAO
+  GOOGLE
+}
+
+enum SWYP_QuestionTarget {
+  TEAM
+  FRIEND
+}
+
+enum SWYP_ReviewType {
+  STRENGTH
+  WEAKNESS
+}
+
+enum SWYP_ChipName {
+  JUDGMENT
+  OBSERVATION
+  LISTENING
+  COMMUNICATION
+  FRIENDLINESS
+  EXECUTION
+  PERSEVERANCE
+}
+
+model SWYP_User {
+  user_id       Int      @id @default(autoincrement())
+  user_email    String   @unique
+  user_nickname String
+  user_login_type SWYP_UserLoginType
+  questions     SWYP_Question[]
+  responses     SWYP_Response[]
+  reviews       SWYP_Review[]
+}
+
+model SWYP_Question {
+  question_id      Int      @id @default(autoincrement())
+  user_id          Int
+  question_type    SWYP_QuestionType 
+  question_target  SWYP_QuestionTarget 
+  question_title   String
+  question_created_at DateTime @default(now())
+  is_used          Boolean  @default(true)
+  user             SWYP_User     @relation(fields: [user_id], references: [user_id])
+  responses        SWYP_Response[]
+  reviews          SWYP_Review[]
+}
+
+model SWYP_Response {
+  response_id      Int      @id @default(autoincrement())
+  user_id          Int
+  question_id      Int
+  response_title   String
+  response_responder String
+  user             SWYP_User     @relation(fields: [user_id], references: [user_id])
+  question         SWYP_Question @relation(fields: [question_id], references: [question_id])
+  reviews          SWYP_Review[]
+}
+
+model SWYP_Chip {
+  chip_id   Int      @id @default(autoincrement())
+  chip_name SWYP_ChipName 
+  reviews         SWYP_Review[]
+}
+
+model SWYP_Review {
+  review_id         Int      @id @default(autoincrement())
+  user_id           Int
+  question_id       Int
+  chip_id           Int
+  response_id       Int
+  review_type       SWYP_ReviewType 
+  review_description String?
+  user              SWYP_User     @relation(fields: [user_id], references: [user_id])
+  question          SWYP_Question @relation(fields: [question_id], references: [question_id])
+  chip              SWYP_Chip     @relation(fields: [chip_id], references: [chip_id])
+  response          SWYP_Response @relation(fields: [response_id], references: [response_id])
 }
