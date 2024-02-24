@@ -1,16 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
+import { PrismaClient, SWYP_UserLoginType } from '@prisma/client';
 import axios from 'axios';
 import { Payload } from './payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
+import { UserDto } from '../users/dto/user.dto';
+
 @Injectable()
 export class AuthService {
   constructor(
     private PrismaService: PrismaService,
     private jwtService: JwtService,
+    private UsersService: UsersService,
   ) {}
 
-  async getAccessToken(code: string, error: string, error_description: string) {
+  async getKakaoAccessToken(
+    code: string,
+    error: string,
+    error_description: string,
+  ) {
     try {
       if (error || error_description) {
         throw new Error(
@@ -37,11 +46,11 @@ export class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       console.error('getAccessToken Error: ', error);
-      throw new Error('getAccessToken Error: ' + error);
+      throw new HttpException('Forbidden', 403);
     }
   }
 
-  async getUserInfo(accessToken: string) {
+  async getKakaoUserInfo(accessToken: string) {
     try {
       const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
         headers: {
@@ -50,24 +59,31 @@ export class AuthService {
         },
       });
 
-      // TODO: email 등 유저 정보 추가 예정
+      // TODO: email 등 유저 정보 수정 & payload interface 수정 & create-user-dto 수정
       const payload: Payload = {
-        user_id: response.data.id,
+        // user_id: response.data.id,
+        // user_email: response.data.kakao_account.profile.email,
+        user_email: '123123',
         user_nickname: response.data.kakao_account.profile.nickname,
+        user_login_type: SWYP_UserLoginType.KAKAO,
       };
 
       const jwtToken = this.jwtService.sign(payload);
 
-      return jwtToken;
+      return { jwtToken, payload };
     } catch (error) {
-      console.error('getUserInfo Error: ', error);
-      throw new Error('getUserInfo Error: ' + error);
+      throw new HttpException('Internal Server Error', 500);
     }
   }
 
-  async saveUserInfo() {
-    // TODO: 유저 정보 저장
-    return;
+  async saveUserInfo(payload: Payload) {
+    try {
+      const response = await this.UsersService.create(payload);
+
+      return response;
+    } catch (error) {
+      throw new HttpException('Internal Server Error', 500);
+    }
   }
 
   async executeKakaoLogout() {
@@ -85,8 +101,32 @@ export class AuthService {
       // );
       return;
     } catch (error) {
-      console.error('executeKakaoLogout Error: ', error);
       throw new Error('executeKakaoLogin Error: ' + error);
+    }
+  }
+
+  async tokenValidateUser(payload: Payload): Promise<UserDto | undefined> {
+    try {
+      const user = await this.UsersService.findByEmail({
+        user_email: payload.user_email,
+      });
+
+      if (!user) {
+        throw new HttpException('Unauthorized', 401);
+      }
+
+      return user;
+    } catch (error) {
+      throw new HttpException('Unauthorized', 401);
+    }
+  }
+
+  async verifyToken(token: string): Promise<any> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      return decoded;
+    } catch (error) {
+      throw new HttpException('Unauthorized', 401);
     }
   }
 }

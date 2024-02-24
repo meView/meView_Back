@@ -1,5 +1,15 @@
 import { AuthService } from './auth.service';
-import { Controller, Get, Query, Res, Req, Session } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Res,
+  Req,
+  Session,
+  UseGuards,
+  HttpException,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { Response, Request } from 'express';
 
 @Controller('auth')
@@ -14,25 +24,25 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    try {
-      // accessToken 발급
-      const { accessToken, refreshToken } =
-        await this.authService.getAccessToken(code, error, error_description);
+    // accessToken 발급
+    const { accessToken, refreshToken } =
+      await this.authService.getKakaoAccessToken(
+        code,
+        error,
+        error_description,
+      );
 
-      // jwtToken 받기
-      const jwtToken = await this.authService.getUserInfo(accessToken);
+    // jwtToken 받기
+    const { jwtToken, payload } = await this.authService.getKakaoUserInfo(
+      accessToken,
+    );
 
-      // TODO: DB 에 user 정보 저장 함수 구현 예정
-      await this.authService.saveUserInfo();
+    // UserInfo 저장
+    await this.authService.saveUserInfo(payload);
 
-      res.setHeader('Authorization', 'Bearer ' + jwtToken);
-      return res.send(jwtToken);
-    } catch (error) {
-      console.error('executeKakaoLogin Error: ', error.message);
-
-      // TODO: 로그인 실패할 경우 행동 처리
-      return res.redirect('http://localhost:3000/NotFound');
-    }
+    // jwtToken 저장
+    res.setHeader('Authorization', 'Bearer ' + jwtToken);
+    return res.send(jwtToken);
   }
 
   @Get('kakao_logout')
@@ -41,5 +51,17 @@ export class AuthController {
 
     // TODO: 로그아웃 구현
     return res.redirect('http://localhost:3000/home');
+  }
+
+  // TODO: 가드(AuthGuard) 추가하기
+  @Get('/authenticate')
+  @UseGuards(AuthGuard)
+  isAuthenticated(@Req() req: Request): any {
+    return;
+  }
+
+  @Get('test')
+  async test(@Req() req: Request) {
+    return;
   }
 }
