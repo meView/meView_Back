@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { DBModule } from './db/db.module';
 import { ContextModule } from './context/context.module';
 import { InjectAccountMiddleware } from './middlewares/InjectAccount.middleware';
-import { AnswerModule } from './answer/answer.module';
+import { AnswerModule } from './context/answer/answer.module';
 
 @Module({
   imports: [DBModule, ContextModule, AnswerModule],
