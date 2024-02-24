@@ -62,8 +62,7 @@ export class AuthService {
       // TODO: email 등 유저 정보 수정 & payload interface 수정 & create-user-dto 수정
       const payload: Payload = {
         // user_id: response.data.id,
-        // user_email: response.data.kakao_account.profile.email,
-        user_email: '123123',
+        user_email: response.data.kakao_account.email,
         user_nickname: response.data.kakao_account.profile.nickname,
         user_login_type: SWYP_UserLoginType.KAKAO,
       };

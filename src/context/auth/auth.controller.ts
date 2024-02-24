@@ -62,6 +62,7 @@ export class AuthController {
 
   @Get('test')
   async test(@Req() req: Request) {
+    console.log(req['payload']);
     return;
   }
 }
