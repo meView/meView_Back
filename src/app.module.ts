@@ -6,9 +6,10 @@ import { ContextModule } from './context/context.module';
 import { InjectAccountMiddleware } from './middlewares/InjectAccount.middleware';
 import { JwtMiddleware } from './middlewares/jwt.middleware';
 import { AuthModule } from './context/auth/auth.module';
+import { AnswerModule } from './context/answer/answer.module';
 
 @Module({
-  imports: [DBModule, ContextModule, AuthModule],
+  imports: [DBModule, ContextModule, AuthModule, AnswerModule],
   controllers: [AppController],
   providers: [AppService],
 })

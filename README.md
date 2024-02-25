@@ -1,73 +1,88 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 테스트 방법
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### test data
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+```sql
+insert into "SWYP_User" values(1, 'test@naver.com', 'test', 'KAKAO');
+insert into "SWYP_Question" values(1, 1, 'STRENGTH', 'TEAM', 'test', now(), true);
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+insert into "SWYP_Chip" values(1, 'JUDGMENT');
+insert into "SWYP_Chip" values(2, 'OBSERVATION');
+insert into "SWYP_Chip" values(3, 'LISTENING');
+insert into "SWYP_Chip" values(4, 'COMMUNICATION');
+insert into "SWYP_Chip" values(5, 'FRIENDLINESS');
+insert into "SWYP_Chip" values(6, 'EXECUTION');
+insert into "SWYP_Chip" values(7, 'PERSEVERANCE');
 ```
 
-## Running the app
+### 질문지 불러오기
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```js
+axios.get(`http://localhost:4000/answer/${question_id}`);
 ```
 
-## Test
+### Response
 
-```bash
-# unit tests
-$ npm run test
+<br />
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "question_id": 1,
+    "question_title": "test",
+    "user_id": 1,
+    "user": {
+      "user_nickname": "test"
+    }
+  },
+  "statusCode": 200
+}
 ```
 
-## Support
+### 답변 작성
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+<br />
 
-## Stay in touch
+```js
+const url = 'http://localhost:4000/answer/create';
+const data = {
+  user_id: 1,
+  question_id: 1,
+  response_title: 'test',
+  response_responder: 'test',
+  reviewData: [
+    {
+      review_type: 'STRENGTH',
+      review_description: 'test',
+      chip_id: 1,
+    },
+    {
+      review_type: 'STRENGTH',
+      review_description: 'test',
+      chip_id: 2,
+    },
+    {
+      review_type: 'STRENGTH',
+      review_description: 'test',
+      chip_id: 3,
+    },
+  ],
+};
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+axios.post(url, data);
+```
 
-## License
+### Response
 
-Nest is [MIT licensed](LICENSE).
+```json
+{
+  "success": true,
+  "code": "OK",
+  "data": {
+    "message": "답변이 성공적으로 저장되었습니다."
+  },
+  "statusCode": 200
+}
+```
