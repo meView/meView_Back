@@ -9,7 +9,7 @@ import { AuthModule } from './context/auth/auth.module';
 import { AnswerModule } from './context/answer/answer.module';
 
 @Module({
-  imports: [DBModule, ContextModule, AuthModule, AnswerModule],
+  imports: [DBModule, ContextModule],
   controllers: [AppController],
   providers: [AppService],
 })
