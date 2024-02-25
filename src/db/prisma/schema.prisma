@@ -2,6 +2,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../node_modules/.prisma/client"
 //  output   = "./generated/client"
 }
 
@@ -10,8 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
   // DB 설정 후 .env 파일에 아래 내용 추가 필수
   // DB 이름 : swyp 
-  // DATABASE_URL="postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public"
+  // DATABASE_URL='postgresql://<사용자>:<비밀번호>@localhost:5432/<DB이름>?schema=public'
+  // 위 URL 작성 시 작은 따옴표 사용
 }
+
+ model User {
+   id        String   @id
+   nickname  String?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+ }
 
 // Enum 정의
 enum SWYP_QuestionType {
@@ -53,6 +62,7 @@ model SWYP_User {
   questions     SWYP_Question[]
   responses     SWYP_Response[]
   reviews       SWYP_Review[]
+  authorities   SWYP_User_Authority[]
 }
 
 model SWYP_Question {
@@ -80,8 +90,8 @@ model SWYP_Response {
 }
 
 model SWYP_Chip {
-  chip_id   Int      @id @default(autoincrement())
-  chip_name SWYP_ChipName 
+  chip_id         Int      @id @default(autoincrement())
+  chip_name       SWYP_ChipName 
   reviews         SWYP_Review[]
 }
 
@@ -97,4 +107,12 @@ model SWYP_Review {
   question          SWYP_Question @relation(fields: [question_id], references: [question_id])
   chip              SWYP_Chip     @relation(fields: [chip_id], references: [chip_id])
   response          SWYP_Response @relation(fields: [response_id], references: [response_id])
+}
+
+// TODO: 추후 admin 계정 생성 
+model SWYP_User_Authority {
+  authority_id Int @id @default(autoincrement())
+  authority_name String @unique
+  user_id Int 
+  user SWYP_User @relation(fields: [user_id], references: [user_id])
 }
