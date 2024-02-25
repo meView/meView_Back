@@ -7,6 +7,7 @@ import { InjectAccountMiddleware } from './middlewares/InjectAccount.middleware'
 import { JwtMiddleware } from './middlewares/jwt.middleware';
 import { AuthModule } from './context/auth/auth.module';
 import { AnswerModule } from './context/answer/answer.module';
+import { QuestionModule } from './context/question/question.module';
 
 @Module({
   imports: [DBModule, ContextModule],

@@ -2,6 +2,8 @@
 
 ### test data
 
+<br />
+
 ```sql
 insert into "SWYP_User" values(1, 'test@naver.com', 'test', 'KAKAO');
 insert into "SWYP_Question" values(1, 1, 'STRENGTH', 'TEAM', 'test', now(), true);
@@ -15,74 +17,34 @@ insert into "SWYP_Chip" values(6, 'EXECUTION');
 insert into "SWYP_Chip" values(7, 'PERSEVERANCE');
 ```
 
-### 질문지 불러오기
+### 질문지 생성하기
 
 ```js
-axios.get(`http://localhost:4000/answer/${question_id}`);
-```
-
-### Response
-
-<br />
-
-```json
-{
-  "success": true,
-  "code": "OK",
-  "data": {
-    "question_id": 1,
-    "question_title": "test",
-    "user_id": 1,
-    "user": {
-      "user_nickname": "test"
-    }
-  },
-  "statusCode": 200
-}
-```
-
-### 답변 작성
-
-<br />
-
-```js
-const url = 'http://localhost:4000/answer/create';
+const url = 'http://localhost:4000/question/create';
 const data = {
-  user_id: 1,
-  question_id: 1,
-  response_title: 'test',
-  response_responder: 'test',
-  reviewData: [
-    {
-      review_type: 'STRENGTH',
-      review_description: 'test',
-      chip_id: 1,
-    },
-    {
-      review_type: 'STRENGTH',
-      review_description: 'test',
-      chip_id: 2,
-    },
-    {
-      review_type: 'STRENGTH',
-      review_description: 'test',
-      chip_id: 3,
-    },
-  ],
+    "question_target": "TEAM",
+    "question_title": "TEST",
+    "question_type": "STRENGTH"
+};
+const headers = {
+	'Authorization': `Bearer ${access_token}`
 };
 
-axios.post(url, data);
+
+axios.post(url, data, { headers });
 ```
 
-### Response
+<br />
+
+### Response 
 
 ```json
 {
-  "success": true,
-  "code": "OK",
-  "data": {
-    "message": "답변이 성공적으로 저장되었습니다."
-  },
-  "statusCode": 200
+    "success": true,
+    "code": "OK",
+    "data": {
+        "message": "Your question has been saved successfully."
+    },
+    "statusCode": 200
 }
 ```
