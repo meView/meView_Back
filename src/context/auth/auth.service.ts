@@ -85,6 +85,42 @@ export class AuthService {
     }
   }
 
+  async tokenValidateUser(payload: Payload): Promise<UserDto | undefined> {
+    try {
+      const user = await this.UsersService.findByEmail({
+        user_email: payload.user_email,
+      });
+
+      if (!user) {
+        throw new HttpException('Unauthorized', 401);
+      }
+
+      const userKeys = Object.keys(user);
+      const payloadKeys = Object.keys(payload);
+
+      const commonKeys = userKeys.filter((key) => payloadKeys.includes(key));
+
+      for (const key of commonKeys) {
+        if (user[key] !== payload[key]) {
+          throw new HttpException('Unauthorized', 401);
+        }
+      }
+
+      return user;
+    } catch (error) {
+      throw new HttpException('Unauthorized', 401);
+    }
+  }
+
+  async verifyToken(token: string): Promise<any> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      return decoded;
+    } catch (error) {
+      throw new HttpException('Unauthorized', 401);
+    }
+  }
+
   async executeKakaoLogout() {
     try {
       // TODO: 구현 예정
@@ -101,31 +137,6 @@ export class AuthService {
       return;
     } catch (error) {
       throw new Error('executeKakaoLogin Error: ' + error);
-    }
-  }
-
-  async tokenValidateUser(payload: Payload): Promise<UserDto | undefined> {
-    try {
-      const user = await this.UsersService.findByEmail({
-        user_email: payload.user_email,
-      });
-
-      if (!user) {
-        throw new HttpException('Unauthorized', 401);
-      }
-
-      return user;
-    } catch (error) {
-      throw new HttpException('Unauthorized', 401);
-    }
-  }
-
-  async verifyToken(token: string): Promise<any> {
-    try {
-      const decoded = this.jwtService.verify(token);
-      return decoded;
-    } catch (error) {
-      throw new HttpException('Unauthorized', 401);
     }
   }
 }

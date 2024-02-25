@@ -15,7 +15,7 @@ import { AuthModule } from './context/auth/auth.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(InjectAccountMiddleware).forRoutes();
-    // TODO: jwt middlweware 적용 Route 수정
-    consumer.apply(JwtMiddleware).forRoutes('/auth/test', '/users');
+    // jwt middleware 대신 passport.jwt.strategy 사용
+    // consumer.apply(JwtMiddleware).forRoutes('/auth/test', '/users');
   }
 }

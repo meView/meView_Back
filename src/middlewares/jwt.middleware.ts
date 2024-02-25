@@ -1,5 +1,5 @@
 // jwt.middleware.ts
-
+// 사용하지 않는 파일입니다. possport.jwt.startegy.ts 에서 해당 역할을 맡습니다.
 import {
   HttpException,
   Injectable,
@@ -33,7 +33,7 @@ export class JwtMiddleware implements NestMiddleware {
       // payload 에 담긴 정보와 db 에서 가져온 정보가 같은지 확인
       await this.compareCommonValues(decodedPayload, foundUserInfo);
 
-      req['payload'] = decodedPayload;
+      req.user = decodedPayload;
       next();
     } catch (error) {
       console.error('Error validating token:', error.message);

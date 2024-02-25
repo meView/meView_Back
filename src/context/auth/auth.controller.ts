@@ -61,8 +61,9 @@ export class AuthController {
   }
 
   @Get('test')
+  @UseGuards(AuthGuard)
   async test(@Req() req: Request) {
-    console.log(req['payload']);
+    console.log(req.user);
     return;
   }
 }
