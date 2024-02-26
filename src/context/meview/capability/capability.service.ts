@@ -3,6 +3,7 @@ import { PrismaService } from 'src/db/prisma/prisma.service';
 import { SWYP_ChipName, SWYP_ReviewType } from '@prisma/client';
 import { ChipNameMapping } from './dto/capability-mapping';
 import { CapabilityChipDto } from './dto/capability-chip.dto';
+import { CapabilityBothDto } from './dto/capability-both.dto';
 
 @Injectable()
 export class CapabilityService {
@@ -90,8 +91,10 @@ export class CapabilityService {
   }
 
   // 해당 프로젝트를 작성한 답변자가 작성한 강점과 약점에 대한 모든 정보 조회
-  async getBoth(question_id: number, response_responder: string) {
+  // ? 어떻게 값이 리턴됨
+  async getBoth(question_id: number, response_responder: string): Promise<CapabilityBothDto> {
     try {
+      // 해당 작성자가 작성한 강약점에 대한 정보를 가져옴
       const both = await this.prismaService.sWYP_Review.findMany({
         where: {
           question_id,
@@ -116,8 +119,7 @@ export class CapabilityService {
         }
       })
 
-      console.log(both)
-
+      // 답변에 대한 강점과 약점을 분류
       const transformBoths = both.reduce((acc, curr) => {
         acc[curr.review_type] = acc[curr.review_type] || [];
 
@@ -126,12 +128,15 @@ export class CapabilityService {
             question_id: curr.question_id,
             review_description: curr.review_description,
             response_responder: curr.response.response_responder,
-            chip: curr.chip.chip_name
+            chip_name: curr.chip.chip_name
           });
         }
 
         return acc;
-      },{})
+      },{
+        STRENGTH: [],
+        WEAKNESS: []
+      })
 
       return transformBoths;
     } catch (error) {
