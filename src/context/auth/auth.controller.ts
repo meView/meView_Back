@@ -1,14 +1,5 @@
 import { AuthService } from './auth.service';
-import {
-  Controller,
-  Get,
-  Query,
-  Res,
-  Req,
-  Session,
-  UseGuards,
-  HttpException,
-} from '@nestjs/common';
+import { Controller, Get, Query, Res, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Response, Request } from 'express';
 
@@ -32,7 +23,7 @@ export class AuthController {
         error_description,
       );
 
-    // jwtToken 받기
+    // jwtToken 발급
     const { jwtToken, payload } = await this.authService.getKakaoUserInfo(
       accessToken,
     );
@@ -45,11 +36,38 @@ export class AuthController {
     return res.send(jwtToken);
   }
 
+  @Get('google_login')
+  async executeGoogleLogin(
+    @Query('code') code: string,
+    @Query('error') error: string,
+    @Query('error_description') error_description: string,
+    @Res() res: Response,
+  ) {
+    // accessToken 발급
+    const { accessToken, refreshToken } =
+      await this.authService.getGoogleAccessToken(
+        code,
+        error,
+        error_description,
+      );
+
+    // jwtToken 발급
+    const { jwtToken, payload } = await this.authService.getGoogleUserInfo(
+      accessToken,
+    );
+
+    // UserInfo 저장
+    await this.authService.saveUserInfo(payload);
+
+    // jwtToken 저장
+    res.setHeader('Authorization', 'Bearer ' + jwtToken);
+    return res.send(jwtToken);
+  }
+
+  // TODO: 로그아웃 구현
   @Get('kakao_logout')
   async executeKakaoLogout(@Res() res: Response) {
     const response = await this.authService.executeKakaoLogout();
-
-    // TODO: 로그아웃 구현
     return res.redirect('http://localhost:3000/home');
   }
 
