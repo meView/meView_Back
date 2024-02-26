@@ -1,6 +1,6 @@
 import { SWYP_ChipName } from "@prisma/client";
 
-export const chipNameMapping: Record<SWYP_ChipName, string> = {
+export const ChipNameMapping: Record<SWYP_ChipName, string> = {
   JUDGMENT: "판단력",
   OBSERVATION: "관찰력",
   LISTENING: "경청능력",

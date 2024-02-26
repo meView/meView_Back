@@ -1,4 +1,4 @@
-export interface CapabilityStrength {
+export interface Capability {
   판단력: number;
   관찰력: number;
   경청능력: number;
@@ -8,6 +8,6 @@ export interface CapabilityStrength {
   끈기력: number;
 }
 
-export class CapabilityStrengthDto {
-  chip_names: CapabilityStrength[]
+export class CapabilityDto {
+  chip_names: Capability[]
 }
