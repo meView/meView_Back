@@ -33,7 +33,15 @@ export class AuthController {
 
     // jwtToken 저장
     res.setHeader('Authorization', 'Bearer ' + jwtToken);
-    return res.send(jwtToken);
+    return res.json({
+      success: true,
+      code: 'OK',
+      data: {
+        user: payload,
+        jwtToken,
+      },
+      statusCode: 200,
+    });
   }
 
   @Get('google_login')
@@ -61,7 +69,15 @@ export class AuthController {
 
     // jwtToken 저장
     res.setHeader('Authorization', 'Bearer ' + jwtToken);
-    return res.send(jwtToken);
+    return res.json({
+      success: true,
+      code: 'OK',
+      data: {
+        user: payload,
+        jwtToken,
+      },
+      statusCode: 200,
+    });
   }
 
   // TODO: 로그아웃 구현
