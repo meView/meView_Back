@@ -1,16 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
-import { CreateAnswerDTO } from './dto/create-answer.dto';
-import { SWYP_User, SWYP_Question } from '@prisma/client';
-import { SelectQuestionDTO } from './dto/select-question.dto';
-import { CreateReviewDTO } from './dto/create-review.dto';
+import { CreateAnswerDto } from './dto/create-answer.dto';
+import { SelectQuestionDto } from './dto/select-question.dto';
 
 @Injectable()
 export class AnswerService {
   constructor(private prismaService: PrismaService) {}
 
   // 질문지 호출
-  async getAnswer(question_id: number): Promise<SelectQuestionDTO> {
+  async getAnswer(question_id: number): Promise<SelectQuestionDto> {
     try {
       // 질문지를 작성한 유저의 정보를 가져오기 위해 해당 테이블에 PK로 조회
       // 조회시 작성자의 이름정보가 필요하기 때문에 user의 user_nickname을 가져옴
@@ -49,7 +47,7 @@ export class AnswerService {
   // 질문지를 작성한 유저가 데이터를 보내면 SWYP_Response 테이블에 작성자의 정보가 입력
   // 작성자의 정보가 정상적으로 입력되면 넘어온 reviewData를 SWYP_Review 테이블에 저장
   async writeAnswer(
-    createAnswerDTO: CreateAnswerDTO,
+    createAnswerDto: CreateAnswerDto,
   ): Promise<{ message: string }> {
     try {
       const {
@@ -58,7 +56,7 @@ export class AnswerService {
         response_title,
         response_responder,
         reviewData,
-      } = createAnswerDTO;
+      } = createAnswerDto;
 
       await this.prismaService.$transaction(async (prisma) => {
         // SWYP_Response 테이블에 어떤 질문지에 누가 응답했는지 저장

@@ -6,7 +6,7 @@ interface ReviewData {
   chip_id: number;
 }
 
-export class CreateAnswerDTO {
+export class CreateAnswerDto {
   user_id: number;
   question_id: number;
   response_title: string;

@@ -1,4 +1,4 @@
-export class CreateReviewDTO {
+export class CreateReviewDto {
   review_type: number;
   review_description: Text;
   user_id: number;

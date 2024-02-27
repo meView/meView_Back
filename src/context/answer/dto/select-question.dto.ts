@@ -1,4 +1,4 @@
-export class SelectQuestionDTO {
+export class SelectQuestionDto {
   question_id: number;
   question_title: string;
   question_target: string;
