@@ -55,7 +55,7 @@ export class AnswerService {
         question_id,
         response_title,
         response_responder,
-        reviewData,
+        review_data,
       } = createAnswerDto;
 
       await this.prismaService.$transaction(async (prisma) => {
@@ -72,7 +72,7 @@ export class AnswerService {
         // chip, review_type, review_description 정보가 최대 6개까지 들어오기 때문에
         // 최대 6번 반복문 실행
         await Promise.all(
-          reviewData.map((e) =>
+          review_data.map((e) =>
             prisma.sWYP_Review.create({
               data: {
                 response_id: createResponse.response_id, // createResponse의 값을 바로 가져와서 사용

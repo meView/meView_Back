@@ -11,5 +11,5 @@ export class CreateAnswerDto {
   question_id: number;
   response_title: string;
   response_responder: string;
-  reviewData: ReviewData[];
+  review_data: ReviewData[];
 }
