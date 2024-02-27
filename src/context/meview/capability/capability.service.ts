@@ -127,7 +127,6 @@ export class CapabilityService {
           acc[curr.review_type].push({
             question_id: curr.question_id,
             review_description: curr.review_description,
-            response_responder: curr.response.response_responder,
             chip_name: curr.chip.chip_name
           });
         }
@@ -136,9 +135,9 @@ export class CapabilityService {
       },{
         STRENGTH: [],
         WEAKNESS: []
-      })
+      });
 
-      return transformBoths;
+      return { ...transformBoths, response_responder };
     } catch (error) {
       console.error(error);
       throw new HttpException(

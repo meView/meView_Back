@@ -9,11 +9,11 @@
 export interface CapabilityBoths {
   question_id: number;
   review_description: string;
-  response_responder: string;
   chip_name: string;
 }
 
 export class CapabilityBothDto {
+  response_responder: string;
   STRENGTH: CapabilityBoths[];
   WEAKNESS: CapabilityBoths[];
 }
