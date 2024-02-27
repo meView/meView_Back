@@ -21,6 +21,7 @@ export class AnswerService {
         select: {
           question_id: true,
           question_title: true,
+          question_target: true,
           user_id: true,
           user: {
             select: {
