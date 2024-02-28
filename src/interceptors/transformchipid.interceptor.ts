@@ -10,7 +10,6 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class TransformChipIdInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('interceptor');
     return next
       .handle()
       .pipe(
