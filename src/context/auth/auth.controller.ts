@@ -29,7 +29,7 @@ export class AuthController {
     );
 
     // UserInfo 저장
-    await this.authService.saveUserInfo(payload);
+    const userInfo = await this.authService.saveUserInfo(payload);
 
     // jwtToken 저장
     res.setHeader('Authorization', 'Bearer ' + jwtToken);
@@ -37,7 +37,7 @@ export class AuthController {
       success: true,
       code: 'OK',
       data: {
-        user: payload,
+        user: userInfo,
         jwtToken,
       },
       statusCode: 200,

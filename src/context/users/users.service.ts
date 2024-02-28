@@ -19,7 +19,7 @@ export class UsersService {
       // TODO: 유저가 이미 있는 경우 처리 방법 수정 예정, 현재는 어떤 행동도 안함.
       if (existingUser) {
         console.log('User already exists: ', existingUser);
-        return;
+        return existingUser;
       }
 
       // 없는 경우 생성

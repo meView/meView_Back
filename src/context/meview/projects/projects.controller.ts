@@ -9,12 +9,15 @@ import {
   UseGuards,
   Req,
   Query,
+  ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
+import { TransformChipIdInterceptor } from '../../../interceptors/transformchipid.interceptor';
 
 @Controller('meview/projects')
 export class ProjectsController {
@@ -34,6 +37,34 @@ export class ProjectsController {
   ) {
     const user_id = req.user['user_id'];
     return await this.projectsService.getMyProjects(user_id, sort);
+  }
+
+  @Get('strength')
+  @UseGuards(AuthGuard)
+  async getMyStrengthOfOneProject(
+    @Req() req: Request,
+    @Query('question_id', ParseIntPipe) question_id: number,
+  ) {
+    const user_id = req.user['user_id'];
+    return await this.projectsService.getMyEvaluationOfOneProject(
+      user_id,
+      'STRENGTH',
+      question_id,
+    );
+  }
+
+  @Get('weakness')
+  @UseGuards(AuthGuard)
+  async getMyWeaknessOfOneProject(
+    @Req() req: Request,
+    @Query('question_id', ParseIntPipe) question_id: number,
+  ) {
+    const user_id = req.user['user_id'];
+    return await this.projectsService.getMyEvaluationOfOneProject(
+      user_id,
+      'WEAKNESS',
+      question_id,
+    );
   }
 
   @Get(':id')
