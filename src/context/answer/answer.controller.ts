@@ -7,7 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { AnswerService } from './answer.service';
-import { CreateAnswerDTO } from './dto/create-answer.dto';
+import { CreateAnswerDto } from './dto/create-answer.dto';
 
 @Controller('answer')
 export class AnswerController {
@@ -19,7 +19,7 @@ export class AnswerController {
   }
 
   @Post('create')
-  async writeAnswer(@Body() createAnswerDTO: CreateAnswerDTO) {
-    return this.answerService.writeAnswer(createAnswerDTO);
+  async writeAnswer(@Body() createAnswerDto: CreateAnswerDto) {
+    return this.answerService.writeAnswer(createAnswerDto);
   }
 }

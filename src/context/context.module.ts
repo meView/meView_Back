@@ -6,9 +6,11 @@ import { AnswerModule } from './answer/answer.module';
 import { MeviewModule } from './meview/meview.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformChipIdInterceptor } from 'src/interceptors/transformchipid.interceptor';
+import { QuestionModule } from './question/question.module';
+import { CapabilityModule } from './meview/capability/capability.module';
 
 @Module({
-  imports: [AccountModule, AuthModule, UsersModule, AnswerModule, MeviewModule],
+  imports: [AccountModule, AuthModule, UsersModule, AnswerModule, MeviewModule, QuestionModule, CapabilityModule],
   providers: [
     {
       provide: APP_INTERCEPTOR,
