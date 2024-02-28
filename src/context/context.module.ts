@@ -10,7 +10,14 @@ import { QuestionModule } from './question/question.module';
 import { CapabilityModule } from './meview/capability/capability.module';
 
 @Module({
-  imports: [AccountModule, AuthModule, UsersModule, AnswerModule, MeviewModule, QuestionModule, CapabilityModule],
+  imports: [
+    AccountModule,
+    AuthModule,
+    UsersModule,
+    AnswerModule,
+    MeviewModule,
+    QuestionModule,
+  ],
   providers: [
     {
       provide: APP_INTERCEPTOR,

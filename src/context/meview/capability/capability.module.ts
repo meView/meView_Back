@@ -5,6 +5,6 @@ import { CapabilityController } from './capability.controller';
 @Module({
   controllers: [CapabilityController],
   providers: [CapabilityService],
-  exports: [CapabilityService]
+  exports: [CapabilityService],
 })
 export class CapabilityModule {}
