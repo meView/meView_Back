@@ -4,13 +4,14 @@ import { SWYP_ChipName, SWYP_ReviewType } from '@prisma/client';
 import { ChipNameMapping } from './dto/capability-mapping';
 import { CapabilityChipDto } from './dto/capability-chip.dto';
 import { CapabilityBothDto } from './dto/capability-both.dto';
+import { CapabilityDto } from './dto/capability.dto';
 
 @Injectable()
 export class CapabilityService {
   constructor(private prismaService: PrismaService) {}
 
   // 내 강약점에 대한 수량 파악
-  async getMyCapabilities(user_id: number, review_type: SWYP_ReviewType): Promise<Record<string, number>> {
+  async getMyCapabilities(user_id: number, review_type: SWYP_ReviewType): Promise<CapabilityDto> {
     try {
       // 해당 유저에게 작성된 답변지 중 강약점에 대한 정보만 가져오기
       const chips = await this.prismaService.sWYP_Chip.findMany({
@@ -32,12 +33,16 @@ export class CapabilityService {
 
       // 데이터베이스에서 가져올때 영어로 되있는 chip name을 한글로 바꾸기 위해 reduce 메소드사용
       // "판단력" = 0 이런식으로 변환
+      // --> 칩 이름을 한글로 변경한부분 통일성을 위해 영어로 다시 변환
+      // --> 기존 Record<string, number>에서 통일성을 위해 dto로 변경
+      // --> reduce에 의해 생성된 객체는 동적으로 키를 가지는데 결과가 반환되는 시점에 필요한 모든 키가 포함되있다는걸 보장하지 않아 타입 오류가 발생
+      // --> 그렇기 때문에 무조건 이 타입으로 반환될거다 라고 타입을 단언
       const transformResults = result.reduce((acc, curr) => {
           const key = Object.keys(curr)[0] as SWYP_ChipName; 
-          const translatedKey = ChipNameMapping[key]; 
-          acc[translatedKey] = curr[key]; 
+          // const translatedKey = ChipNameMapping[key]; 
+          acc[key] = curr[key]; 
           return acc;
-        }, {});
+        }, {} as CapabilityDto); // CapabilityDto 타입으로 단언
 
       return transformResults;
     } catch (error) {
