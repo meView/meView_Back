@@ -30,29 +30,21 @@ import { Request } from 'express';
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
-  @Post()
-  create(@Body() createHomeDto: CreateHomeDto) {
-    return this.homeService.create(createHomeDto);
+  @Get('questions')
+  @UseGuards(AuthGuard)
+  async getMyQuestionList(
+    @Req() req: Request ) {
+    const user_id = req.user['user_id'];
+    return this.homeService.getMyQuestionList(user_id);
   }
 
-  @Get()
-  findAll() {
-    return 's';
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.homeService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHomeDto: UpdateHomeDto) {
-    return this.homeService.update(+id, updateHomeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.homeService.remove(+id);
+  @Get('/question/:question_id')
+  @UseGuards(AuthGuard)
+  async getMyQuestionDetail(
+    @Req() req: Request,
+    @Param('question_id', ParseIntPipe) question_id: number ) {
+      const user_id = req.user['user_id'];
+      return this.homeService.getMyQuestionDetail(user_id, question_id);
   }
 
   @Put('question/update/:question_id')
