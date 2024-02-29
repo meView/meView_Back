@@ -1,4 +1,12 @@
-import { Controller, Get, Param, UseGuards, Req, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  Req,
+  ValidationPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CapabilityService } from './capability.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
@@ -29,28 +37,38 @@ export class CapabilityController {
   @UseGuards(AuthGuard)
   async getStrengthChip(
     @Req() req: Request,
-    @Param('chip_name', CapabilityValidationPipe) chip_name) {
+    @Param('chip_name', CapabilityValidationPipe) chip_name,
+  ) {
     const user_id = req.user['user_id'];
-    return this.capabilityService.getCapabilityChips(user_id, chip_name, 'STRENGTH');
- 
+    return this.capabilityService.getCapabilityChips(
+      user_id,
+      chip_name,
+      'STRENGTH',
+    );
   }
-  
+
   // 내 약점 / 칩 선택
   @Get('weakness/:chip_name')
   @UseGuards(AuthGuard)
   async getWeaknessChip(
     @Req() req: Request,
-    @Param('chip_name', CapabilityValidationPipe) chip_name) {
+    @Param('chip_name', CapabilityValidationPipe) chip_name,
+  ) {
     const user_id = req.user['user_id'];
-    return this.capabilityService.getCapabilityChips(user_id, chip_name, 'WEAKNESS');
+    return this.capabilityService.getCapabilityChips(
+      user_id,
+      chip_name,
+      'WEAKNESS',
+    );
   }
 
   // 닉네임별 자세한 리뷰
   @Get('both/:question_id/:response_responder')
   @UseGuards(AuthGuard)
   async getBoth(
-    @Param('question_id', ParseIntPipe) question_id, 
-    @Param('response_responder') response_responder: string){
+    @Param('question_id', ParseIntPipe) question_id,
+    @Param('response_responder') response_responder: string,
+  ) {
     return this.capabilityService.getBoth(question_id, response_responder);
   }
 }
