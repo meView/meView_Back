@@ -39,11 +39,11 @@ export class ProjectsController {
     return await this.projectsService.getMyProjects(user_id, sort);
   }
 
-  @Get('strength')
+  @Get('strength/:question_id')
   @UseGuards(AuthGuard)
   async getMyStrengthOfOneProject(
     @Req() req: Request,
-    @Query('question_id', ParseIntPipe) question_id: number,
+    @Param('question_id', ParseIntPipe) question_id: number,
   ) {
     const user_id = req.user['user_id'];
     return await this.projectsService.getMyEvaluationOfOneProject(
@@ -53,11 +53,11 @@ export class ProjectsController {
     );
   }
 
-  @Get('weakness')
+  @Get('weakness/:question_id')
   @UseGuards(AuthGuard)
   async getMyWeaknessOfOneProject(
     @Req() req: Request,
-    @Query('question_id', ParseIntPipe) question_id: number,
+    @Param('question_id', ParseIntPipe) question_id: number,
   ) {
     const user_id = req.user['user_id'];
     return await this.projectsService.getMyEvaluationOfOneProject(

@@ -1,4 +1,4 @@
-import { ArgumentMetadata, PipeTransform } from "@nestjs/common";
+import { ArgumentMetadata, PipeTransform } from '@nestjs/common';
 
 export class CapabilityValidationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {

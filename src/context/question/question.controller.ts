@@ -10,10 +10,7 @@ export class QuestionController {
 
   @Post('create')
   @UseGuards(AuthGuard)
-  create(
-    @Req() req: Request,
-    @Body() createQuestionDto: CreateQuestionDto
-    ) {
+  create(@Req() req: Request, @Body() createQuestionDto: CreateQuestionDto) {
     const user_id = req.user['user_id'];
     return this.questionService.create(user_id, createQuestionDto);
   }

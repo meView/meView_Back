@@ -6,17 +6,21 @@ import { PrismaService } from 'src/db/prisma/prisma.service';
 export class QuestionService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(user_id: number, createQuestionDto: CreateQuestionDto): Promise<{ message: string }>  {
+  async create(
+    user_id: number,
+    createQuestionDto: CreateQuestionDto,
+  ): Promise<{ message: string }> {
     try {
-      const { question_target, question_title, question_type } = createQuestionDto;
+      const { question_target, question_title, question_type } =
+        createQuestionDto;
 
       await this.prismaService.sWYP_Question.create({
         data: {
-          question_target, 
-          question_title, 
+          question_target,
+          question_title,
           question_type,
-          user_id
-        }
+          user_id,
+        },
       });
 
       return { message: 'Your question has been saved successfully.' };
@@ -29,5 +33,3 @@ export class QuestionService {
     }
   }
 }
-
-
