@@ -32,8 +32,7 @@ export class HomeController {
 
   @Get('questions')
   @UseGuards(AuthGuard)
-  async getMyQuestionList(
-    @Req() req: Request ) {
+  async getMyQuestionList(@Req() req: Request) {
     const user_id = req.user['user_id'];
     return this.homeService.getMyQuestionList(user_id);
   }
@@ -42,9 +41,10 @@ export class HomeController {
   @UseGuards(AuthGuard)
   async getMyQuestionDetail(
     @Req() req: Request,
-    @Param('question_id', ParseIntPipe) question_id: number ) {
-      const user_id = req.user['user_id'];
-      return this.homeService.getMyQuestionDetail(user_id, question_id);
+    @Param('question_id', ParseIntPipe) question_id: number,
+  ) {
+    const user_id = req.user['user_id'];
+    return this.homeService.getMyQuestionDetail(user_id, question_id);
   }
 
   @Put('question/update/:question_id')
