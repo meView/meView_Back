@@ -88,7 +88,6 @@ export class AnswerService {
       });
       return { message: '답변이 성공적으로 저장되었습니다.' };
     } catch (error) {
-      console.error(error);
       throw new HttpException(
         '서버 오류입니다.',
         HttpStatus.INTERNAL_SERVER_ERROR,
