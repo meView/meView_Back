@@ -18,7 +18,7 @@ export class AuthService {
   async getKakaoAccessToken(
     code: string,
     error: string,
-    error_description: string,
+    error_description: string, 
   ) {
     try {
       if (error || error_description) {
@@ -30,8 +30,8 @@ export class AuthService {
         'https://kauth.kakao.com/oauth/token',
         {
           grant_type: 'authorization_code',
-          client_id: process.env.REST_API_KEY,
-          redirect_uri: process.env.REDIRECT_URI,
+          client_id: process.env.KAKAO_REST_API_KEY,
+          redirect_uri: process.env.KAKAO_REDIRECT_URI,
           code: code,
         },
         {
@@ -40,10 +40,11 @@ export class AuthService {
           },
         },
       );
-      const accessToken = response.data.access_token;
-      const refreshToken = response.data.refresh_token;
 
-      return { accessToken, refreshToken };
+      return {
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
+      };
     } catch (error) {
       console.error('getAccessToken Error: ', error);
       throw new HttpException('Forbidden', 403);
@@ -65,6 +66,64 @@ export class AuthService {
         user_email: response.data.kakao_account.email,
         user_nickname: response.data.kakao_account.profile.nickname,
         user_login_type: SWYP_UserLoginType.KAKAO,
+      };
+
+      const jwtToken = this.jwtService.sign(payload);
+
+      return { jwtToken, payload };
+    } catch (error) {
+      throw new HttpException('Internal Server Error', 500);
+    }
+  }
+
+  // TODO: 함수 구현
+  async getGoogleAccessToken(
+    code: string,
+    error: string,
+    error_description: string,
+  ) {
+    try {
+      if (error || error_description) {
+        throw new Error(
+          'getAccessToken Error from kakao: ' + error_description,
+        );
+      }
+
+      const response = await axios.post(
+        'https://oauth2.googleapis.com/token',
+        {
+          code: code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+          grant_type: 'authorization_code',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+
+      return { accessToken: response.data.access_token, refreshToken: null };
+    } catch (error) {
+      console.error('getAccessToken Error: ', error);
+      throw new HttpException('Forbidden', 403);
+    }
+  }
+
+  async getGoogleUserInfo(accessToken: string) {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/userinfo/v2/me?access_token=${accessToken}`,
+      );
+
+      // TODO: 구글에서 제공 -> name & given_name 어떤 걸 사용
+      const payload: Payload = {
+        // user_id: response.data.id,
+        user_email: response.data.email,
+        user_nickname: response.data.name,
+        user_login_type: SWYP_UserLoginType.GOOGLE,
       };
 
       const jwtToken = this.jwtService.sign(payload);

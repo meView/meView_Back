@@ -19,7 +19,7 @@ export class AnswerController {
   }
 
   @Post('create')
-  async writeAnswer(@Body() createAnswerDTO: CreateAnswerDto) {
-    return this.answerService.writeAnswer(createAnswerDTO);
+  async writeAnswer(@Body() createAnswerDto: CreateAnswerDto) {
+    return this.answerService.writeAnswer(createAnswerDto);
   }
 }
