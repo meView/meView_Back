@@ -18,5 +18,9 @@ RUN npm run build \
     rm -rf node_modules \
     npm install --production=true
 
+# PM2 설치
+RUN npm install -g pm2 
+COPY ecosystem.config.js .
+
 # 컨테이너 실행 시 실행될 명령어
-CMD ["npm", "run", "start"]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]

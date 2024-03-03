@@ -7,7 +7,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('test') test(@Query('withError', ParseBooleanPipe) withError?: boolean) {
-    return this.usersService.test(withError);
+    const data = process.env.ENV_VERSION;
+    return data;
   }
 
   @Get('refresh-token')
