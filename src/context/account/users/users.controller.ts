@@ -6,9 +6,11 @@ import { ParseBooleanPipe } from 'src/app.pipe';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('test') test(@Query('withError', ParseBooleanPipe) withError?: boolean) {
+  @Get('test')
+  async test(@Query('withError', ParseBooleanPipe) withError?: boolean) {
     const data = process.env.ENV_VERSION;
-    return data;
+    console.log(data);
+    return await this.usersService.test;
   }
 
   @Get('refresh-token')

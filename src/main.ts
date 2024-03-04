@@ -42,10 +42,5 @@ async function bootstrap() {
   });
 
   await app.listen(4000);
-
-  const httpServer = http.createServer(app.getHttpAdapter().getInstance());
-  httpServer.listen(80, () => {
-    console.log('HTTP Server running on port 80');
-  });
 }
 bootstrap();
