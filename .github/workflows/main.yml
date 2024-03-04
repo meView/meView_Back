@@ -3,7 +3,7 @@ name: meview
 on:
   push:
     branches:
-      - gitactions
+      - feature/*
 
 jobs:
   build:
