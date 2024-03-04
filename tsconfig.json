@@ -18,8 +18,5 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "lib": ["ES2021", "DOM"],
-    "paths": {
-      "src/*": ["src/*"]
-    }
   },
 }
