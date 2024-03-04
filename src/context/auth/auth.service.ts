@@ -31,7 +31,7 @@ export class AuthService {
         {
           grant_type: 'authorization_code',
           client_id: process.env.KAKAO_REST_API_KEY,
-          redirect_uri: process.env.KAKAO_REDIRECT_URI,
+          redirect_uri: 'http://localhost:3000/auth/kakao_login',
           code: code,
         },
         {

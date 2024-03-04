@@ -7,6 +7,7 @@ services:
       - "80:4000"
     depends_on:
       - postgres
+      - prisma
     environment:
       DATABASE_URL: postgres://suhwan_main:tnrl0258!@postgres:5432/swyp?schema=public
 
@@ -18,3 +19,5 @@ services:
       POSTGRES_PASSWORD: tnrl0258!
     ports:
       - "5432:5432"
+    volumes:
+      - ./prisma:/app/src/db/prisma 
