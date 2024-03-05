@@ -20,6 +20,7 @@ export class AnswerService {
           question_id: true,
           question_title: true,
           question_target: true,
+          question_type: true,
           user_id: true,
           user: {
             select: {
@@ -35,7 +36,6 @@ export class AnswerService {
 
       return answer;
     } catch (error) {
-      console.error(error);
       throw new HttpException(
         '서버 오류입니다.',
         HttpStatus.INTERNAL_SERVER_ERROR,
