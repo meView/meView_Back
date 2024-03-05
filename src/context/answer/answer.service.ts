@@ -15,6 +15,7 @@ export class AnswerService {
       const answer = await this.prismaService.sWYP_Question.findUnique({
         where: {
           question_id,
+          is_used: true,
         },
         select: {
           question_id: true,

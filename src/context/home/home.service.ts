@@ -18,7 +18,7 @@ export class HomeService {
       const questions = await this.prismaService.sWYP_Question.findMany({
         where: {
           user_id,
-          is_used: true
+          is_used: true,
         },
         select: {
           question_id: true,
@@ -45,6 +45,7 @@ export class HomeService {
         where: {
           user_id,
           question_id,
+          is_used: true,
         },
         select: {
           question_id: true,
@@ -70,7 +71,7 @@ export class HomeService {
   ): Promise<UpdateQuestionDTO> {
     try {
       await this.prismaService.sWYP_Question.findUniqueOrThrow({
-        where: { question_id, user_id },
+        where: { question_id, user_id, is_used: true },
       });
 
       const updatedQuestion = await this.prismaService.sWYP_Question.update({
@@ -95,7 +96,7 @@ export class HomeService {
   ): Promise<DeleteQuestionDTO> {
     try {
       await this.prismaService.sWYP_Question.findUniqueOrThrow({
-        where: { question_id, user_id },
+        where: { question_id, user_id, is_used: true },
       });
 
       const deletedQuestion = await this.prismaService.sWYP_Question.update({
