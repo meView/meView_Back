@@ -9,3 +9,13 @@ export const ChipNameMapping: Record<SWYP_ChipName, string> = {
   EXECUTION: "실행력",
   PERSEVERANCE: "끈기력",
 };
+
+export enum ChipNames {
+  "JUDGMENT" = 1,
+  "OBSERVATION",
+  "LISTENING",
+  "COMMUNICATION",
+  "FRIENDLINESS",
+  "EXECUTION",
+  "PERSEVERANCE",
+};
