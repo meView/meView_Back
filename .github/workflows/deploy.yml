@@ -20,8 +20,8 @@ jobs:
           port: 22
           script: |
             cd ~/
-            
+
             # git clone 및 npm install
             git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
             cd meView_Back
-            npm install
+            npm ci
