@@ -19,7 +19,18 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd ~/.
+            cd ~/
+            # nvm 설치 (설치 되어있으면 건너뜀)
+            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # nvm 스크립트 로드
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # bash_completion 스크립트 로드
+            
+            # Node.js 설치
+            nvm install 20
+            nvm use 20
+      
+            # git clone 및 npm install
             git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
-            cd ./meView_Back
-            npm i
+            cd meView_Back
+            npm install
