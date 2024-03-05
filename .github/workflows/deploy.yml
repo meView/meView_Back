@@ -19,5 +19,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd ~
+            cd ~/.
             git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
