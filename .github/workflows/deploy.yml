@@ -21,3 +21,5 @@ jobs:
           script: |
             cd ~/.
             git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
+            cd ./meView_Back
+            npm i
