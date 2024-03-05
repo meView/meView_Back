@@ -1,4 +1,4 @@
-import { SWYP_QuestionTarget, SWYP_QuestionType } from "@prisma/client";
+import { SWYP_QuestionTarget, SWYP_QuestionType } from '@prisma/client';
 
 export class MyQuestionListDto {
   question_id: number;

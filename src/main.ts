@@ -9,15 +9,16 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as session from 'express-session';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import * as http from 'http';
 
 async function bootstrap() {
+  dotenv.config();
   const expressApp = express();
   const app = await NestFactory.create(
     AppModule,
     new ExpressAdapter(expressApp),
   );
 
-  dotenv.config();
   // MiddleWares
   app.use(requestIp.mw());
   app.use(bodyParser.text());
