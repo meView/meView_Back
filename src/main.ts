@@ -10,6 +10,8 @@ import * as express from 'express';
 import * as session from 'express-session';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as http from 'http';
+import * as https from 'https';
+import * as fs from 'fs';
 
 async function bootstrap() {
   dotenv.config();
@@ -18,6 +20,17 @@ async function bootstrap() {
     AppModule,
     new ExpressAdapter(expressApp),
   );
+
+  const privateKey = fs.readFileSync(
+    '/etc/letsencrypt/live/mokkitlink.store/privkey.pem',
+  );
+  const certificate = fs.readFileSync(
+    '/etc/letsencrypt/live/mokkitlink.store/cert.pem',
+  );
+  const ca = fs.readFileSync(
+    '/etc/letsencrypt/live/mokkitlink.store/fullchain.pem',
+  );
+  const httpsOptions = { key: privateKey, cert: certificate, ca: ca };
 
   // MiddleWares
   app.use(requestIp.mw());
@@ -46,6 +59,13 @@ async function bootstrap() {
   const httpServer = http.createServer(app.getHttpAdapter().getInstance());
   httpServer.listen(80, () => {
     console.log('HTTP Server running on port 80');
+  });
+  const httpsServer = https.createServer(
+    httpsOptions,
+    app.getHttpAdapter().getInstance(),
+  );
+  httpsServer.listen(443, () => {
+    console.log('HTTPS Server running on port 443');
   });
 }
 bootstrap();
