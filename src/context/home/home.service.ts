@@ -18,6 +18,7 @@ export class HomeService {
       const questions = await this.prismaService.sWYP_Question.findMany({
         where: {
           user_id,
+          is_used: true
         },
         select: {
           question_id: true,
