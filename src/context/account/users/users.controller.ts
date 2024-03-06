@@ -9,8 +9,7 @@ export class UsersController {
   @Get('test')
   async test(@Query('withError', ParseBooleanPipe) withError?: boolean) {
     const data = process.env.ENV_VERSION;
-    console.log(data);
-    return await this.usersService.test;
+    return data;
   }
 
   @Get('refresh-token')
