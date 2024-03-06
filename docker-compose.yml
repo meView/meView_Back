@@ -18,3 +18,5 @@ services:
       POSTGRES_PASSWORD: tnrl0258!
     ports:
       - "5432:5432"
+    volumes:
+      - ./prisma:/app/src/db/prisma 
