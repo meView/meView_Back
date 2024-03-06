@@ -1,0 +1,50 @@
+name: Pull Request Deploy Branch
+
+on:
+  pull_request:
+    branches:
+      - deploy
+
+jobs:
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # RDS 연결 테스트
+      - name: Test connection to RDS PostgreSQL database
+        env:
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+        run: |
+          PGPASSWORD=$RDS_PASSWORD psql -h $RDS_HOSTNAME -U $RDS_USERNAME -d $RDS_DATABASE -p $RDS_PORT -c 'SELECT version();'
+
+      # deploy 브런치 clone
+      - name: Setup SSH connection and clone deploy branch
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 22
+          script: |
+            cd ~/
+
+            # git clone 및 npm install
+            git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
+            cd meView_Back
+
+            # 기존 node_modules 삭제
+            rm -rf ./node_modules
+
+            # npm 실행
+            npm ci
+
+            # Prisma 설정 업데이트
+            npx prisma generate
+
+            # 프로젝트 빌드
+            npm run build
