@@ -52,7 +52,10 @@ export class AuthController {
     @Query('error') error: string,
     @Query('error_description') error_description: string,
     @Res() res: Response,
+    @Req() req: Request,
   ) {
+    const origin = req.headers['origin'];
+    console.log('Request origin: ', origin);
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getGoogleAccessToken(
