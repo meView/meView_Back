@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       # RDS 연결 테스트
-      - name: Test connection to RDS PostgreSQL database
+      - name: Test connection to RDS database
         env:
           RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
           RDS_PORT: ${{ secrets.RDS_PORT }}
