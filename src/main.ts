@@ -51,7 +51,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: 'http://localhost:3000', // Front URL
+    origin: process.env.DEPLOY_FRONT_URL, // Front URL
   });
 
   await app.listen(4000);
