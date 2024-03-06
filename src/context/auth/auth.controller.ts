@@ -15,6 +15,8 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
+    const origin = req.headers['origin'];
+    console.log('Request origin: ', origin);
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getKakaoAccessToken(
