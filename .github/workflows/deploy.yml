@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script: |
-            docker stop ${docker ps -a -q} || true
-            docker rm ${docker ps -a -q} || true
-            docker pull ojhhh/meview:latest
-            docker run -d --name meview-app -p 80:4000 ojhhh/meview:latest
+            sudo docker stop ${sudo docker ps -a -q} || true
+            sudo docker rm ${sudo docker ps -a -q} || true
+            sudo docker pull ojhhh/meview:latest
+            sudo docker run -d --name meview-app -p 80:4000 ojhhh/meview:latest
