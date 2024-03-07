@@ -6,6 +6,28 @@ on:
       - deploy
 
 jobs:
+  # docker hub에 이미지 push
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ojhhh/meview:latest
+
+  # RDS 연결 테스트 및 docker hub 이미지 pull
   deploy-to-ec2:
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +44,7 @@ jobs:
         run: |
           PGPASSWORD=$RDS_PASSWORD psql -h $RDS_HOSTNAME -U $RDS_USERNAME -d $RDS_DATABASE -p $RDS_PORT -c 'SELECT version();'
 
-      # deploy 브런치 clone
+      # docker 이미지 교체 및 실행
       - name: Setup SSH connection and clone deploy branch
         uses: appleboy/ssh-action@master
         with:
@@ -31,20 +53,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script: |
-            cd ~/
-
-            # git clone 및 npm install
-            git clone -b deploy --single-branch https://github.com/meView/meView_Back.git
-            cd meView_Back
-
-            # 기존 node_modules 삭제
-            rm -rf ./node_modules
-
-            # npm 실행
-            npm ci
-
-            # Prisma 설정 업데이트
-            npx prisma generate --schema=src/db/prisma/schema.prisma
-
-            # 프로젝트 빌드
-            npm run build
+            docker pull ojhhh/meview:latest
+            docker stop meview-app || true
+            docker rm meview-app || true
+            docker run -d --name meview-app -p 80:4000 ojhhh/meview:latest
