@@ -29,6 +29,7 @@ jobs:
 
   # RDS 연결 테스트 및 docker hub 이미지 pull
   deploy-to-ec2:
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +54,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script: |
-            sudo docker pull ojhhh/meview:latest
-            sudo docker stop meview-app || true
-            sudo docker rm meview-app || true
-            sudo docker run -d --name meview-app -p 80:4000 ojhhh/meview:latest
+            docker stop ${docker ps -a -q} || true
+            docker rm ${docker ps -a -q} || true
+            docker pull ojhhh/meview:latest
+            docker run -d --name meview-app -p 80:4000 ojhhh/meview:latest

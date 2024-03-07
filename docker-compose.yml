@@ -9,4 +9,3 @@ services:
       - ${ENVIRONMENT_PATH}
     environment:
       DATABASE_URL: ${DATABASE_URL}
-      ANOTHER_ENV_VAR: ${ANOTHER_ENV_VAR}
