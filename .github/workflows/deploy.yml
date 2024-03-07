@@ -58,5 +58,5 @@ jobs:
             sudo docker rm $(sudo docker ps -a -q) || true
             sudo docker pull ojhhh/meview:latest
             sudo docker run -d --name meview-app -p 80:4000 \
-              -v /root/.env:/usr/src/app/.env ojhhh/meview:latest \
+              -v /root/.env:/usr/src/app/.env \
               ojhhh/meview:latest
