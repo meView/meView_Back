@@ -31,7 +31,7 @@ export class AuthService {
         {
           grant_type: 'authorization_code',
           client_id: process.env.KAKAO_REST_API_KEY,
-          redirect_uri: process.env.KAKAO_REDIRECT_URI,
+          redirect_uri: process.env.KAKAO_LOCAL_REDIRECT_URI,
           code: code,
         },
         {
@@ -95,7 +95,7 @@ export class AuthService {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+          redirect_uri: process.env.GOOGLE_LOCAL_REDIRECT_URI,
           grant_type: 'authorization_code',
         },
         {
