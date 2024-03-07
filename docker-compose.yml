@@ -6,6 +6,6 @@ services:
     ports:
       - "80:4000"
     volumes:
-      - /root/.env:/app/.env
+      - /root/.env:/usr/src/app/.env
     environment:
       DATABASE_URL: ${DATABASE_URL}
