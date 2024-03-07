@@ -9,12 +9,12 @@ export class QuestionService {
   async create(
     user_id: number,
     createQuestionDto: CreateQuestionDto,
-  ): Promise<{ message: string }> {
+  ): Promise<CreateQuestionDto> {
     try {
       const { question_target, question_title, question_type } =
         createQuestionDto;
 
-      await this.prismaService.sWYP_Question.create({
+      const response = await this.prismaService.sWYP_Question.create({
         data: {
           question_target,
           question_title,
@@ -23,7 +23,7 @@ export class QuestionService {
         },
       });
 
-      return { message: 'Your question has been saved successfully.' };
+      return response;
     } catch (error) {
       console.error(error);
       throw new HttpException(
