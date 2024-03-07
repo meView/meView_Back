@@ -9,4 +9,3 @@ services:
       - /root/.env:/app/.env
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    
