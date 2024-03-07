@@ -7,3 +7,4 @@ services:
       - "80:4000"
     environment:
       DATABASE_URL: postgres://postgres:meview_postgres@rds-meview.c5y84yeac8he.ap-northeast-2.rds.amazonaws.com:5432/swyp?schema=public
+
