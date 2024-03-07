@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
 import { PrismaClient, SWYP_UserLoginType } from '@prisma/client';
 import axios from 'axios';
@@ -6,6 +6,8 @@ import { Payload } from './payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { UserDto } from '../users/dto/user.dto';
+import { Request } from 'express';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,7 @@ export class AuthService {
     private PrismaService: PrismaService,
     private jwtService: JwtService,
     private UsersService: UsersService,
+    @Inject(REQUEST) private req: Request,
   ) {}
 
   async getKakaoAccessToken(
@@ -26,12 +29,19 @@ export class AuthService {
           'getAccessToken Error from kakao: ' + error_description,
         );
       }
+
+      const originHeader = this.req.headers['origin'];
+      let redirect_uri = process.env.KAKAO_REDIRECT_URI;
+      if (originHeader && originHeader.includes('localhost')) {
+        redirect_uri = process.env.KAKAO_LOCAL_REDIRECT_URI;
+      }
+
       const response = await axios.post(
         'https://kauth.kakao.com/oauth/token',
         {
           grant_type: 'authorization_code',
           client_id: process.env.KAKAO_REST_API_KEY,
-          redirect_uri: process.env.KAKAO_REDIRECT_URI,
+          redirect_uri: redirect_uri,
           code: code,
         },
         {
@@ -89,13 +99,19 @@ export class AuthService {
         );
       }
 
+      const originHeader = this.req.headers['origin'];
+      let redirect_uri = process.env.GOOGLE_REDIRECT_URI;
+      if (originHeader && originHeader.includes('localhost')) {
+        redirect_uri = process.env.GOOGLE_LOCAL_REDIRECT_URI;
+      }
+
       const response = await axios.post(
         'https://oauth2.googleapis.com/token',
         {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+          redirect_uri: redirect_uri,
           grant_type: 'authorization_code',
         },
         {
