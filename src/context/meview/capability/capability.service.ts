@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
 import { SWYP_ChipName, SWYP_ReviewType } from '@prisma/client';
-import { ChipNameMapping } from './dto/capability-mapping';
+import { ChipNameMapping, ChipNames } from './dto/capability-mapping';
 import { CapabilityChipDto } from './dto/capability-chip.dto';
 import { CapabilityBothDto } from './dto/capability-both.dto';
 import { CapabilityDto } from './dto/capability.dto';
@@ -14,25 +14,29 @@ export class CapabilityService {
   async getMyCapabilities(
     user_id: number,
     review_type: SWYP_ReviewType,
-  ): Promise<CapabilityDto> {
+  // ): Promise<CapabilityDto> {
+  ): Promise<any> {
     try {
       // 해당 유저에게 작성된 답변지 중 강약점에 대한 정보만 가져오기
-      const chips = await this.prismaService.sWYP_Chip.findMany({
-        select: {
-          chip_name: true,
-          reviews: {
-            where: {
-              review_type,
-              user_id,
-            },
-          },
+      const chips = await this.prismaService.sWYP_Review.findMany({
+        where: {
+          review_type,
+          user_id,
+          question: {
+            is_used: true,
+          }
         },
+        select: {
+          chip_id: true,
+        }
       });
 
       // 가져온 강약점에서 데이터를 칩 이름 : 칩 개수 형태로 변환
-      const result = chips.map((chip) => ({
-        [chip.chip_name]: chip.reviews.length,
-      }));
+      // const result = chips.reduce((acc, curr) => {
+      //   const cnt = acc[curr.chip_id] || 0;
+      //   acc[curr.chip_id] = cnt + 1;
+      //   return acc;
+      // },{});
 
       // 데이터베이스에서 가져올때 영어로 되있는 chip name을 한글로 바꾸기 위해 reduce 메소드사용
       // "판단력" = 0 이런식으로 변환
@@ -40,16 +44,24 @@ export class CapabilityService {
       // --> 기존 Record<string, number>에서 통일성을 위해 dto로 변경
       // --> reduce에 의해 생성된 객체는 동적으로 키를 가지는데 결과가 반환되는 시점에 필요한 모든 키가 포함되있다는걸 보장하지 않아 타입 오류가 발생
       // --> 그렇기 때문에 무조건 이 타입으로 반환될거다 라고 타입을 단언
-      const transformResults = result.reduce((acc, curr) => {
-        const key = Object.keys(curr)[0] as SWYP_ChipName;
-        // const translatedKey = ChipNameMapping[key];
-        acc[key] = curr[key];
+      const transformResults = chips.reduce((acc, curr) => {
+        const key = Object.values(curr).toString();
+        const translatedKey = ChipNames[key];
+        const cnt = acc[translatedKey] || 0;
+        acc[translatedKey] = cnt + 1;
         return acc;
-      }, {} as CapabilityDto); // CapabilityDto 타입으로 단언
+      }, {
+        "JUDGMENT": 0,
+        "OBSERVATION": 0,
+        "LISTENING": 0,
+        "COMMUNICATION": 0,
+        "FRIENDLINESS": 0,
+        "EXECUTION": 0,
+        "PERSEVERANCE": 0,
+      } as CapabilityDto);
 
       return transformResults;
     } catch (error) {
-      console.error(error);
       throw new HttpException(
         '서버 오류입니다.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -71,6 +83,9 @@ export class CapabilityService {
           chip: {
             chip_name,
           },
+          question: {
+            is_used: true,
+          }
         },
         select: {
           review_description: true,
@@ -116,6 +131,9 @@ export class CapabilityService {
           response: {
             response_responder,
           },
+          question: {
+            is_used: true,
+          }
         },
         select: {
           question_id: true,
