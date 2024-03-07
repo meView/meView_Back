@@ -12,7 +12,7 @@ export class UsersService {
 
   async test(withError?: boolean) {
     if (withError) throw new Exception(ExceptionCode.BadRequest, 'test error');
-    return 'success';
+    return await this.prismaService.user.findMany();
   }
 
   async refreshToken(refreshToken: string) {

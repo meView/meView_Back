@@ -9,15 +9,29 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as session from 'express-session';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import * as http from 'http';
+import * as https from 'https';
+import * as fs from 'fs';
 
 async function bootstrap() {
+  dotenv.config();
   const expressApp = express();
   const app = await NestFactory.create(
     AppModule,
     new ExpressAdapter(expressApp),
   );
 
-  dotenv.config();
+  const privateKey = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/privkey.pem',
+  );
+  const certificate = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/cert.pem',
+  );
+  const ca = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/fullchain.pem',
+  );
+  const httpsOptions = { key: privateKey, cert: certificate, ca: ca };
+
   // MiddleWares
   app.use(requestIp.mw());
   app.use(bodyParser.text());
@@ -37,9 +51,22 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: 'http://localhost:3000', // Front URL
+    origin: '*', // Front URL
+    credentials: true, // 필요에 따라 설정 (인증 정보 전송 여부)
   });
 
   await app.listen(4000);
+
+  const httpServer = http.createServer(app.getHttpAdapter().getInstance());
+  httpServer.listen(80, () => {
+    console.log('HTTP Server running on port 80');
+  });
+  const httpsServer = https.createServer(
+    httpsOptions,
+    app.getHttpAdapter().getInstance(),
+  );
+  httpsServer.listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+  });
 }
 bootstrap();
