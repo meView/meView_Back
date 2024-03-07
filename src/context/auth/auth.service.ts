@@ -18,7 +18,7 @@ export class AuthService {
   async getKakaoAccessToken(
     code: string,
     error: string,
-    error_description: string, 
+    error_description: string,
   ) {
     try {
       if (error || error_description) {
