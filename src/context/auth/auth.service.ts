@@ -67,7 +67,7 @@ export class AuthService {
         user_nickname: response.data.kakao_account.profile.nickname,
         user_login_type: SWYP_UserLoginType.KAKAO,
       };
-
+      console.log(`${process.env.JWT_SECRET}`)
       const jwtToken = this.jwtService.sign(payload);
       console.log("jwtToken : ", jwtToken)
       return { jwtToken, payload };
