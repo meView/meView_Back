@@ -22,13 +22,13 @@ async function bootstrap() {
   );
 
   const privateKey = fs.readFileSync(
-    '/etc/letsencrypt/live/meview.store/privkey.pem',
+    '/usr/src/app/meview.store/privkey.pem',
   );
   const certificate = fs.readFileSync(
-    '/etc/letsencrypt/live/meview.store/cert.pem',
+    '/usr/src/app/meview.store/cert.pem',
   );
   const ca = fs.readFileSync(
-    '/etc/letsencrypt/live/meview.store/fullchain.pem',
+    '/usr/src/app/meview.store/fullchain.pem',
   );
   const httpsOptions = { key: privateKey, cert: certificate, ca: ca };
 
