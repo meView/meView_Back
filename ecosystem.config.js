@@ -1,7 +1,7 @@
 module.exports = [
   {
     script: 'dist/main.js',
-    name: 'nest-app',
+    name: 'meview-app',
     exec_mode: 'cluster',
     instances: 2,
   },

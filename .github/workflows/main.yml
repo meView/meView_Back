@@ -59,8 +59,9 @@ jobs:
           script: |
             sudo docker stop $(sudo docker ps -q) || true
             sudo docker rm $(sudo docker ps -a -q) || true
+            sudo docker rmi $(docker images -q)
             sudo docker pull ojhhh/meview:latest
             sudo docker run -d --name meview-app -p 80:4000 -p 443:443 \
               -v /home/ubuntu/meView_Back/.env:/usr/src/app/.env \
-              -v /etc/letsencrypt/live/meview.store:/usr/src/app/meview.store \
+              -v /etc/letsencrypt:/etc/letsencrypt:ro \
               ojhhh/meview:latest
