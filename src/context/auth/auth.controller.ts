@@ -18,6 +18,7 @@ export class AuthController {
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getKakaoAccessToken(
+        req,
         code,
         error,
         error_description,
@@ -55,6 +56,7 @@ export class AuthController {
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getGoogleAccessToken(
+        req,
         code,
         error,
         error_description,
