@@ -24,9 +24,13 @@ export class AuthService {
   ) {
     try {
       let redirectUri = process.env.KAKAO_LOCAL_REDIRECT_URI;
-      if (req.protocol == 'https') {
+      if (
+        req.headers.origin &&
+        req.headers.origin === process.env.FRONT_DEPLOY_PATH
+      ) {
         redirectUri = process.env.KAKAO_REDIRECT_URI;
       }
+
       if (error || error_description) {
         throw new Error(
           'getAccessToken Error from kakao: ' + error_description,
@@ -91,9 +95,13 @@ export class AuthService {
   ) {
     try {
       let redirectUri = process.env.GOOGLE_LOCAL_REDIRECT_URI;
-      if (req.protocol == 'https') {
+      if (
+        req.headers.origin &&
+        req.headers.origin === process.env.FRONT_DEPLOY_PATH
+      ) {
         redirectUri = process.env.GOOGLE_REDIRECT_URI;
       }
+
       if (error || error_description) {
         throw new Error(
           'getAccessToken Error from kakao: ' + error_description,
