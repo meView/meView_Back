@@ -22,14 +22,15 @@ export class AuthController {
         error,
         error_description,
       );
-
+    console.log("GET kakao_login accessToken : ", accessToken)
     // jwtToken 발급
     const { jwtToken, payload } = await this.authService.getKakaoUserInfo(
       accessToken,
     );
-
+    console.log("GET kakao_login jwtToken : ", jwtToken)
     // UserInfo 저장
     const userInfo = await this.authService.saveUserInfo(payload);
+    console.log("GET kakao_login userInfo : ", userInfo)
 
     // jwtToken 저장
     res.setHeader('Authorization', 'Bearer ' + jwtToken);
