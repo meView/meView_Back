@@ -14,7 +14,7 @@ export class CapabilityService {
   async getMyCapabilities(
     user_id: number,
     review_type: SWYP_ReviewType,
-  // ): Promise<CapabilityDto> {
+    // ): Promise<CapabilityDto> {
   ): Promise<any> {
     try {
       // 해당 유저에게 작성된 답변지 중 강약점에 대한 정보만 가져오기
@@ -24,11 +24,11 @@ export class CapabilityService {
           user_id,
           question: {
             is_used: true,
-          }
+          },
         },
         select: {
           chip_id: true,
-        }
+        },
       });
 
       // 가져온 강약점에서 데이터를 칩 이름 : 칩 개수 형태로 변환
@@ -44,21 +44,24 @@ export class CapabilityService {
       // --> 기존 Record<string, number>에서 통일성을 위해 dto로 변경
       // --> reduce에 의해 생성된 객체는 동적으로 키를 가지는데 결과가 반환되는 시점에 필요한 모든 키가 포함되있다는걸 보장하지 않아 타입 오류가 발생
       // --> 그렇기 때문에 무조건 이 타입으로 반환될거다 라고 타입을 단언
-      const transformResults = chips.reduce((acc, curr) => {
-        const key = Object.values(curr).toString();
-        const translatedKey = ChipNames[key];
-        const cnt = acc[translatedKey] || 0;
-        acc[translatedKey] = cnt + 1;
-        return acc;
-      }, {
-        "JUDGMENT": 0,
-        "OBSERVATION": 0,
-        "LISTENING": 0,
-        "COMMUNICATION": 0,
-        "FRIENDLINESS": 0,
-        "EXECUTION": 0,
-        "PERSEVERANCE": 0,
-      } as CapabilityDto);
+      const transformResults = chips.reduce(
+        (acc, curr) => {
+          const key = Object.values(curr).toString();
+          const translatedKey = ChipNames[key];
+          const cnt = acc[translatedKey] || 0;
+          acc[translatedKey] = cnt + 1;
+          return acc;
+        },
+        {
+          JUDGMENT: 0,
+          OBSERVATION: 0,
+          LISTENING: 0,
+          COMMUNICATION: 0,
+          FRIENDLINESS: 0,
+          EXECUTION: 0,
+          PERSEVERANCE: 0,
+        } as CapabilityDto,
+      );
 
       return transformResults;
     } catch (error) {
@@ -85,7 +88,7 @@ export class CapabilityService {
           },
           question: {
             is_used: true,
-          }
+          },
         },
         select: {
           review_description: true,
@@ -117,8 +120,6 @@ export class CapabilityService {
     }
   }
 
-  // 해당 프로젝트를 작성한 답변자가 작성한 강점과 약점에 대한 모든 정보 조회
-  // ? 어떻게 값이 리턴됨
   async getBoth(
     question_id: number,
     response_responder: string,
@@ -133,7 +134,7 @@ export class CapabilityService {
           },
           question: {
             is_used: true,
-          }
+          },
         },
         select: {
           question_id: true,
@@ -155,15 +156,11 @@ export class CapabilityService {
       // 답변에 대한 강점과 약점을 분류
       const transformBoths = both.reduce(
         (acc, curr) => {
-          acc[curr.review_type] = acc[curr.review_type] || [];
-
-          if (acc[curr.review_type].length < 2) {
-            acc[curr.review_type].push({
-              question_id: curr.question_id,
-              review_description: curr.review_description,
-              chip_name: curr.chip.chip_name,
-            });
-          }
+          acc[curr.review_type].push({
+            question_id: curr.question_id,
+            review_description: curr.review_description,
+            chip_name: curr.chip.chip_name,
+          });
 
           return acc;
         },
@@ -175,7 +172,6 @@ export class CapabilityService {
 
       return { ...transformBoths, response_responder };
     } catch (error) {
-      console.error(error);
       throw new HttpException(
         '서버 오류입니다.',
         HttpStatus.INTERNAL_SERVER_ERROR,

@@ -51,7 +51,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: '*', // Front URL
+    origin: process.env.ALLOWED_ORIGINS.split(','), // Front URL
     credentials: true, // 필요에 따라 설정 (인증 정보 전송 여부)
   });
 

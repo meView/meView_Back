@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Req } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
 import { PrismaClient, SWYP_UserLoginType } from '@prisma/client';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { Payload } from './payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { UserDto } from '../users/dto/user.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +17,20 @@ export class AuthService {
   ) {}
 
   async getKakaoAccessToken(
+    @Req() req: Request,
     code: string,
     error: string,
     error_description: string,
   ) {
     try {
+      let redirectUri = process.env.KAKAO_LOCAL_REDIRECT_URI;
+      if (
+        req.headers.origin &&
+        req.headers.origin === process.env.FRONT_DEPLOY_PATH
+      ) {
+        redirectUri = process.env.KAKAO_REDIRECT_URI;
+      }
+
       if (error || error_description) {
         throw new Error(
           'getAccessToken Error from kakao: ' + error_description,
@@ -31,7 +41,7 @@ export class AuthService {
         {
           grant_type: 'authorization_code',
           client_id: process.env.KAKAO_REST_API_KEY,
-          redirect_uri: process.env.KAKAO_REDIRECT_URI,
+          redirect_uri: redirectUri,
           code: code,
         },
         {
@@ -78,11 +88,20 @@ export class AuthService {
 
   // TODO: 함수 구현
   async getGoogleAccessToken(
+    @Req() req: Request,
     code: string,
     error: string,
     error_description: string,
   ) {
     try {
+      let redirectUri = process.env.GOOGLE_LOCAL_REDIRECT_URI;
+      if (
+        req.headers.origin &&
+        req.headers.origin === process.env.FRONT_DEPLOY_PATH
+      ) {
+        redirectUri = process.env.GOOGLE_REDIRECT_URI;
+      }
+
       if (error || error_description) {
         throw new Error(
           'getAccessToken Error from kakao: ' + error_description,
@@ -95,7 +114,7 @@ export class AuthService {
           code: code,
           client_id: process.env.GOOGLE_CLIENT_ID,
           client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+          redirect_uri: redirectUri,
           grant_type: 'authorization_code',
         },
         {
