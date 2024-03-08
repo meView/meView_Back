@@ -22,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   // Passport 내부 로직에서 자동 호출 O, 개발자가 직접 호출 X
   async validate(payload: Payload, done: VerifiedCallback): Promise<any> {
+    console.log("payload : ", payload)
     const user = await this.authService.tokenValidateUser(payload);
     console.log("user : ", user)
     if (!user) {
