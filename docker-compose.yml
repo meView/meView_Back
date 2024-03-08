@@ -2,22 +2,12 @@ version: '3'
 
 services:
   app:
-    image: suhwani/meview:latest
+    image: ojhhh/meview:latest
     ports:
       - "80:4000"
-    depends_on:
-      - postgres
-      - prisma
-    environment:
-      DATABASE_URL: postgres://suhwan_main:tnrl0258!@postgres:5432/swyp?schema=public
-
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: swyp
-      POSTGRES_USER: suhwan_main
-      POSTGRES_PASSWORD: tnrl0258!
-    ports:
-      - "5432:5432"
     volumes:
-      - ./prisma:/app/src/db/prisma 
+      - /home/ubuntu/meView_Back/.env:/usr/src/app/.env
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    

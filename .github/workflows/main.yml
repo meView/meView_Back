@@ -1,0 +1,65 @@
+name: Pull Request Deploy Branch
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # docker hub에 이미지 push
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ojhhh/meview:latest
+
+  # RDS 연결 테스트 및 docker hub 이미지 pull
+  deploy-to-ec2:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # RDS 연결 테스트
+      - name: Test connection to RDS database
+        env:
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
+          RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+        run: |
+          PGPASSWORD=$RDS_PASSWORD psql -h $RDS_HOSTNAME -U $RDS_USERNAME -d $RDS_DATABASE -p $RDS_PORT -c 'SELECT version();'
+
+      # docker 이미지 교체 및 실행
+      - name: Setup SSH connection and clone deploy branch
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.MAIN_HOST }}
+          username: ${{ secrets.MAIN_USERNAME }}
+          key: ${{ secrets.MAIN_SSH_KEY }}
+          port: 22
+          script: |
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm $(sudo docker ps -a -q) || true
+            sudo docker pull ojhhh/meview:latest
+            sudo docker run -d --name meview-app -p 80:4000 \
+              -v /home/ubuntu/meView_Back/.env:/usr/src/app/.env \
+              ojhhh/meview:latest
