@@ -6,7 +6,7 @@ services:
     ports:
       - "80:4000"
     volumes:
-      - /root/.env:/usr/src/app/.env
+      - /home/ubuntu/meView_back/.env:/usr/src/app/.env
       - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       DATABASE_URL: ${DATABASE_URL}

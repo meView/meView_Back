@@ -21,16 +21,16 @@ async function bootstrap() {
     new ExpressAdapter(expressApp),
   );
 
-  // const privateKey = fs.readFileSync(
-  //   '/etc/letsencrypt/live/meview.store/privkey.pem',
-  // );
-  // const certificate = fs.readFileSync(
-  //   '/etc/letsencrypt/live/meview.store/cert.pem',
-  // );
-  // const ca = fs.readFileSync(
-  //   '/etc/letsencrypt/live/meview.store/fullchain.pem',
-  // );
-  // const httpsOptions = { key: privateKey, cert: certificate, ca: ca };
+  const privateKey = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/privkey.pem',
+  );
+  const certificate = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/cert.pem',
+  );
+  const ca = fs.readFileSync(
+    '/etc/letsencrypt/live/meview.store/fullchain.pem',
+  );
+  const httpsOptions = { key: privateKey, cert: certificate, ca: ca };
 
   // MiddleWares
   app.use(requestIp.mw());
@@ -57,16 +57,16 @@ async function bootstrap() {
 
   await app.listen(4000);
 
-  // const httpServer = http.createServer(app.getHttpAdapter().getInstance());
-  // httpServer.listen(80, () => {
-  //   console.log('HTTP Server running on port 80');
-  // });
-  // const httpsServer = https.createServer(
-  //   httpsOptions,
-  //   app.getHttpAdapter().getInstance(),
-  // );
-  // httpsServer.listen(443, () => {
-  //   console.log('HTTPS Server running on port 443');
-  // });
+  const httpServer = http.createServer(app.getHttpAdapter().getInstance());
+  httpServer.listen(80, () => {
+    console.log('HTTP Server running on port 80');
+  });
+  const httpsServer = https.createServer(
+    httpsOptions,
+    app.getHttpAdapter().getInstance(),
+  );
+  httpsServer.listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+  });
 }
 bootstrap();
