@@ -165,11 +165,10 @@ export class AuthService {
 
   async tokenValidateUser(payload: Payload): Promise<UserDto | undefined> {
     try {
-      console.log("payload : ", payload)
       const user = await this.UsersService.findByEmail({
         user_email: payload.user_email,
       });
-      console.log("user : ", user)
+
       if (!user) {
         throw new HttpException('Unauthorized', 401);
       }
