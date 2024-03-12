@@ -8,9 +8,11 @@ import { JwtStrategy } from './passport.jwt.strategy';
 @Module({
   imports: [
     // JWT 모듈 등록
-    JwtModule.register({
+    JwtModule.registerAsync({
+      useFactory: async () => ({
       secret: process.env.JWT_SECRET, // JWT Signature의 Secret 값 입력
       signOptions: { expiresIn: '1h' }, // JWT 토큰의 만료시간 입력
+      }),
     }),
     PassportModule,
     UsersModule,
