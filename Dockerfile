@@ -11,9 +11,14 @@ RUN npm install
 # 소스 코드 복사
 COPY . .
 
+# Prisma generate
+RUN npm install --production=false && \
+    npx prisma generate --schema=src/db/prisma/schema.prisma
+
+# Vim 설치
+RUN apt-get update && apt-get install -y vim
+
 # 앱 빌드
-RUN npm install --production=false
-RUN npx prisma generate --schema=src/db/prisma/schema.prisma
 RUN npm run build \
     rm -rf node_modules \
     npm install --production=true
