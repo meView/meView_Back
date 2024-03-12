@@ -2,7 +2,6 @@ import { AuthService } from './auth.service';
 import { Controller, Get, Query, Res, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Response, Request } from 'express';
-console.log('auth.controller.ts');
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +15,6 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    console.log('executeKakaoLogin');
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getKakaoAccessToken(
@@ -25,20 +23,15 @@ export class AuthController {
         error,
         error_description,
       );
-    console.log('getKakaoAccessToken');
-    console.log('accessToken :', accessToken)
+
     // jwtToken 발급
     const { jwtToken, payload } = await this.authService.getKakaoUserInfo(
       accessToken,
     );
-    console.log('getKakaoUserInfo');
-    console.log('jwtToken :', jwtToken)
-    console.log('payload :', payload)
 
     // UserInfo 저장
     const userInfo = await this.authService.saveUserInfo(payload);
-    console.log('userInfo :', userInfo)
-    
+
     // jwtToken 저장
     res.setHeader('Authorization', 'Bearer ' + jwtToken);
     return res.json({
