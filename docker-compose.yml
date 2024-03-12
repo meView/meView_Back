@@ -10,4 +10,3 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    
