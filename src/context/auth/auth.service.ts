@@ -155,8 +155,10 @@ export class AuthService {
 
   async saveUserInfo(payload: Payload) {
     try {
+      console.log('saveUserInfo')
+      console.log('payload :', payload)  
       const response = await this.UsersService.create(payload);
-
+      console.log('response :', response)
       return response;
     } catch (error) {
       throw new HttpException('Internal Server Error', 500);
