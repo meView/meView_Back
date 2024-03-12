@@ -12,9 +12,9 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import * as http from 'http';
 import * as https from 'https';
 import * as fs from 'fs';
+dotenv.config();
 
 async function bootstrap() {
-  dotenv.config();
   const expressApp = express();
   const app = await NestFactory.create(
     AppModule,
