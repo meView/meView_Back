@@ -63,15 +63,13 @@ export class AuthService {
 
   async getKakaoUserInfo(accessToken: string) {
     try {
-      console.log('getKakaoUserInfo')
-      console.log('accessToken : ', accessToken);
       const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      console.log('response :', response)
+
       // TODO: email 등 유저 정보 수정 & payload interface 수정 & create-user-dto 수정
       const payload: Payload = {
         // user_id: response.data.id,
@@ -79,9 +77,9 @@ export class AuthService {
         user_nickname: response.data.kakao_account.profile.nickname,
         user_login_type: SWYP_UserLoginType.KAKAO,
       };
-      console.log('payload :', payload)
+
       const jwtToken = this.jwtService.sign(payload);
-      console.log('jwtToken :', jwtToken)
+
       return { jwtToken, payload };
     } catch (error) {
       throw new HttpException('Internal Server Error', 500);
@@ -146,7 +144,8 @@ export class AuthService {
         user_nickname: response.data.name,
         user_login_type: SWYP_UserLoginType.GOOGLE,
       };
-
+      console.log("this.jwtService")
+      console.log(this.jwtService);
       const jwtToken = this.jwtService.sign(payload);
 
       return { jwtToken, payload };
@@ -157,10 +156,8 @@ export class AuthService {
 
   async saveUserInfo(payload: Payload) {
     try {
-      console.log('saveUserInfo')
-      console.log('payload :', payload)  
       const response = await this.UsersService.create(payload);
-      console.log('response :', response)
+
       return response;
     } catch (error) {
       throw new HttpException('Internal Server Error', 500);
