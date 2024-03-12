@@ -144,10 +144,7 @@ export class AuthService {
         user_nickname: response.data.name,
         user_login_type: SWYP_UserLoginType.GOOGLE,
       };
-      console.log('process.env.JWT_SECRET');
-      console.log(process.env.JWT_SECRET);
-      console.log("this.jwtService")
-      console.log(this.jwtService);
+
       const jwtToken = this.jwtService.sign(payload);
 
       return { jwtToken, payload };
