@@ -2,6 +2,7 @@ import { AuthService } from './auth.service';
 import { Controller, Get, Query, Res, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Response, Request } from 'express';
+console.log('auth.controller.ts');
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,7 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
+    console.log('executeKakaoLogin');
     // accessToken 발급
     const { accessToken, refreshToken } =
       await this.authService.getKakaoAccessToken(

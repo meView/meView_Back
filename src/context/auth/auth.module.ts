@@ -5,6 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './passport.jwt.strategy';
+console.log('auth.Module.ts');
+console.log(process.env.JWT_SECRET);
 @Module({
   imports: [
     // JWT 모듈 등록
