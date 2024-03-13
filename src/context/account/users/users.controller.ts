@@ -9,7 +9,7 @@ export class UsersController {
   @Get('test')
   async test(@Query('withError', ParseBooleanPipe) withError?: boolean) {
     const data = process.env.ENV_VERSION;
-    return data;
+    return { version: '2024.03.13' };
   }
 
   @Get('refresh-token')
