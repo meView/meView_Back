@@ -6,6 +6,7 @@ import {
   Req,
   ValidationPipe,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CapabilityService } from './capability.service';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -19,17 +20,23 @@ export class CapabilityController {
   // 내 강점
   @Get('strength')
   @UseGuards(AuthGuard)
-  async getMyStrength(@Req() req: Request) {
+  async getMyStrength(
+    @Req() req: Request,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
+  ) {
     const user_id = req.user['user_id'];
-    return this.capabilityService.getMyCapabilities(user_id, 'STRENGTH');
+    return this.capabilityService.getMyCapabilities(user_id, 'STRENGTH', sort);
   }
 
   // 내 약점
   @Get('weakness')
   @UseGuards(AuthGuard)
-  async getMyWeakness(@Req() req: Request) {
+  async getMyWeakness(
+    @Req() req: Request,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
+  ) {
     const user_id = req.user['user_id'];
-    return this.capabilityService.getMyCapabilities(user_id, 'WEAKNESS');
+    return this.capabilityService.getMyCapabilities(user_id, 'WEAKNESS', sort);
   }
 
   // 내 강점 / 칩 선택
@@ -38,12 +45,14 @@ export class CapabilityController {
   async getStrengthChip(
     @Req() req: Request,
     @Param('chip_name', CapabilityValidationPipe) chip_name,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
   ) {
     const user_id = req.user['user_id'];
     return this.capabilityService.getCapabilityChips(
       user_id,
       chip_name,
       'STRENGTH',
+      sort,
     );
   }
 
@@ -53,12 +62,14 @@ export class CapabilityController {
   async getWeaknessChip(
     @Req() req: Request,
     @Param('chip_name', CapabilityValidationPipe) chip_name,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
   ) {
     const user_id = req.user['user_id'];
     return this.capabilityService.getCapabilityChips(
       user_id,
       chip_name,
       'WEAKNESS',
+      sort,
     );
   }
 
@@ -68,7 +79,12 @@ export class CapabilityController {
   async getBoth(
     @Param('question_id', ParseIntPipe) question_id,
     @Param('response_responder') response_responder: string,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
   ) {
-    return this.capabilityService.getBoth(question_id, response_responder);
+    return this.capabilityService.getBoth(
+      question_id,
+      response_responder,
+      sort,
+    );
   }
 }

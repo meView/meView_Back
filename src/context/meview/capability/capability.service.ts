@@ -14,10 +14,12 @@ export class CapabilityService {
   async getMyCapabilities(
     user_id: number,
     review_type: SWYP_ReviewType,
+    sort: 'oldest' | 'newest',
     // ): Promise<CapabilityDto> {
   ): Promise<any> {
     try {
       // 해당 유저에게 작성된 답변지 중 강약점에 대한 정보만 가져오기
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const chips = await this.prismaService.sWYP_Review.findMany({
         where: {
           review_type,
@@ -28,6 +30,9 @@ export class CapabilityService {
         },
         select: {
           chip_id: true,
+        },
+        orderBy: {
+          review_id: sortedType, // 'desc'로 설정하여 최신 순서대로 정렬합니다.
         },
       });
 
@@ -77,8 +82,10 @@ export class CapabilityService {
     user_id: number,
     chip_name: SWYP_ChipName,
     review_type: SWYP_ReviewType,
+    sort: 'oldest' | 'newest',
   ): Promise<CapabilityChipDto[]> {
     try {
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const reviews = await this.prismaService.sWYP_Review.findMany({
         where: {
           user_id,
@@ -99,6 +106,9 @@ export class CapabilityService {
               response_responder: true,
             },
           },
+        },
+        orderBy: {
+          review_id: sortedType,
         },
       });
 
@@ -123,9 +133,11 @@ export class CapabilityService {
   async getBoth(
     question_id: number,
     response_responder: string,
+    sort: 'oldest' | 'newest',
   ): Promise<CapabilityBothDto> {
     try {
       // 해당 작성자가 작성한 강약점에 대한 정보를 가져옴
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const both = await this.prismaService.sWYP_Review.findMany({
         where: {
           question_id,
@@ -150,6 +162,9 @@ export class CapabilityService {
               chip_name: true,
             },
           },
+        },
+        orderBy: {
+          question_id: sortedType, // createdAt 속성을 기준으로 내림차순으로 정렬하여 최신 순으로 반환합니다.
         },
       });
 
