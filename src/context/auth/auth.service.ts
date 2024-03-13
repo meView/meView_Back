@@ -183,19 +183,6 @@ export class AuthService {
         throw new HttpException('Unauthorized', 401);
       }
 
-      const userKeys = Object.keys(user).filter(
-        (key) => key !== user.user_login_type,
-      );
-      const payloadKeys = Object.keys(payload);
-
-      const commonKeys = userKeys.filter((key) => payloadKeys.includes(key));
-
-      for (const key of commonKeys) {
-        if (user[key] !== payload[key]) {
-          throw new HttpException('Unauthorized', 401);
-        }
-      }
-
       return user;
     } catch (error) {
       throw new HttpException('Unauthorized', 401);
