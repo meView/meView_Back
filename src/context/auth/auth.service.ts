@@ -183,7 +183,9 @@ export class AuthService {
         throw new HttpException('Unauthorized', 401);
       }
 
-      const userKeys = Object.keys(user);
+      const userKeys = Object.keys(user).filter(
+        (key) => key !== user.user_email,
+      );
       const payloadKeys = Object.keys(payload);
 
       const commonKeys = userKeys.filter((key) => payloadKeys.includes(key));
