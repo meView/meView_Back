@@ -155,6 +155,16 @@ export class AuthService {
 
   async saveUserInfo(payload: Payload) {
     try {
+      const existedUser = await this.PrismaService.sWYP_User.findUnique({
+        where: {
+          user_email: payload.user_email,
+        },
+      });
+
+      if (!!existedUser) {
+        return existedUser;
+      }
+
       const response = await this.UsersService.create(payload);
 
       return response;
