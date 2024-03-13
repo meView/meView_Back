@@ -184,7 +184,7 @@ export class AuthService {
       }
 
       const userKeys = Object.keys(user).filter(
-        (key) => key !== user.user_email,
+        (key) => key !== user.user_login_type,
       );
       const payloadKeys = Object.keys(payload);
 
