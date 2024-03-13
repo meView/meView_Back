@@ -30,14 +30,15 @@ export class ProjectsService {
 
   async getMyProjects(
     user_id: number,
-    sort: 'asc' | 'desc',
+    sort: 'oldest' | 'newest',
   ): Promise<SelectProjectDTO[] | null> {
     try {
       // question & question 에 대한 response 가져오기
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const questionWithResponse =
         await this.PrismaService.sWYP_Question.findMany({
           where: { user_id, is_used: true },
-          orderBy: { question_created_at: sort },
+          orderBy: { question_created_at: sortedType },
           select: {
             question_id: true,
             question_title: true,
@@ -73,14 +74,17 @@ export class ProjectsService {
     user_id: number,
     evaluation: 'STRENGTH' | 'WEAKNESS',
     question_id: number,
+    sort: 'oldest' | 'newest',
   ): Promise<SelectEvaluationOfOneProjectDTO[] | null> {
     try {
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const questionWithResponse =
         await this.PrismaService.sWYP_Question.findUnique({
           where: { question_id, user_id, is_used: true },
           select: {
             responses: {
               where: { user_id, question_id },
+              orderBy: { user_id: sortedType },
               select: {
                 response_id: true,
                 response_responder: true,

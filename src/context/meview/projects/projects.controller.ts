@@ -32,7 +32,7 @@ export class ProjectsController {
   @UseGuards(AuthGuard)
   async getMyProjects(
     @Req() req: Request,
-    @Query('sort') sort: 'asc' | 'desc' = 'desc',
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
     // desc: 최신순, asc: 오래된 순
   ) {
     const user_id = req.user['user_id'];
@@ -44,12 +44,14 @@ export class ProjectsController {
   async getMyStrengthOfOneProject(
     @Req() req: Request,
     @Param('question_id', ParseIntPipe) question_id: number,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
   ) {
     const user_id = req.user['user_id'];
     return await this.projectsService.getMyEvaluationOfOneProject(
       user_id,
       'STRENGTH',
       question_id,
+      sort,
     );
   }
 
@@ -58,12 +60,14 @@ export class ProjectsController {
   async getMyWeaknessOfOneProject(
     @Req() req: Request,
     @Param('question_id', ParseIntPipe) question_id: number,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
   ) {
     const user_id = req.user['user_id'];
     return await this.projectsService.getMyEvaluationOfOneProject(
       user_id,
       'WEAKNESS',
       question_id,
+      sort,
     );
   }
 

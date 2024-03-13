@@ -15,6 +15,7 @@ import {
   BadRequestException,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto } from './dto/create-home.dto';
@@ -32,9 +33,12 @@ export class HomeController {
 
   @Get('questions')
   @UseGuards(AuthGuard)
-  async getMyQuestionList(@Req() req: Request) {
+  async getMyQuestionList(
+    @Req() req: Request,
+    @Query('sort') sort: 'oldest' | 'newest' = 'newest',
+  ) {
     const user_id = req.user['user_id'];
-    return this.homeService.getMyQuestionList(user_id);
+    return this.homeService.getMyQuestionList(user_id, sort);
   }
 
   @Get('/question/:question_id')

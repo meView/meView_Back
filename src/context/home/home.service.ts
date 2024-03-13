@@ -13,13 +13,18 @@ export class HomeService {
   constructor(private prismaService: PrismaService) {}
 
   // 나의 질문지 목록 가져오기
-  async getMyQuestionList(user_id: number): Promise<MyQuestionListDto[]> {
+  async getMyQuestionList(
+    user_id: number,
+    sort: 'oldest' | 'newest',
+  ): Promise<MyQuestionListDto[]> {
     try {
+      const sortedType = sort === 'oldest' ? 'asc' : 'desc';
       const questions = await this.prismaService.sWYP_Question.findMany({
         where: {
           user_id,
           is_used: true,
         },
+        orderBy: { question_created_at: sortedType },
         select: {
           question_id: true,
           question_title: true,
