@@ -10,15 +10,24 @@
 
 ---
 ## 백엔드 시스템 아키텍처
-![image](https://github.com/meView/meView_Front/assets/73896327/67a50de5-c0f2-4f40-a1c5-fc2edab5c383)
+![35](https://github.com/meView/meView_Back/assets/54920289/e7b5ed93-b4d0-448f-bda2-79a890d7f14f)
 
 ### 기술스택
-- **언어**: `javascript`
-- **라이브러리**: `React`
-- **서버 상태 관리**: `React query`
-- **전역 상태 관리**: `Recoil`
-- **비동기 통신**: `Axios`
-- **스타일**: `styled-components`
+- **언어**: `typescript`
+- **프레임워크**: `NestJS`
+- **데이터베이스**: `PostgreSQL, AWS RDS`
+- **ORM**: `Prisma`
+- **Deploy**: `AWS EC2, Route53`
+- **CI/CD**: `Docker, Github Actions`
+- **HTTPS인증**: `Cerbot`
+
+### ERD
+
+
+![36](https://github.com/meView/meView_Back/assets/54920289/152fed9c-eac5-402f-905c-1f760105ef74)
+
+### API
+![36](https://github.com/meView/meView_Back/assets/54920289/714ffdce-5a4d-497f-9350-0df97156ca9e)
 
 ---
 
