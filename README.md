@@ -21,15 +21,17 @@
 - **CI/CD**: `Docker, Github Actions`
 - **HTTPS인증**: `Cerbot`
 
-### ERD
+## ERD
 
 
 ![36](https://github.com/meView/meView_Back/assets/54920289/152fed9c-eac5-402f-905c-1f760105ef74)
 
-### API
-![36](https://github.com/meView/meView_Back/assets/54920289/714ffdce-5a4d-497f-9350-0df97156ca9e)
 
----
+
+## API
+![37](https://github.com/meView/meView_Back/assets/54920289/21bb8d8c-55c2-414a-907d-97da53035f95)
+
+
 
 ## 주요 기능
 
